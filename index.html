@@ -45,7 +45,7 @@ header.top>div{min-width:0}
 .layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:28px;margin-top:26px;align-items:start}
 aside.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px 16px 12px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 24px);overflow:auto}
 .rail .grp{display:flex;flex-direction:column;gap:6px}
-.lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.lbl{font:600 12px var(--f-body);letter-spacing:.01em;color:var(--muted)}
 .seg{display:flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:7px;overflow:hidden}
 .seg button{flex:1 1 auto;font:500 13px var(--f-body);background:transparent;color:var(--ink-2);border:0;border-right:1px solid var(--rule);padding:6px 8px;cursor:pointer;min-width:40px}
 .seg button:last-child{border-right:0}
@@ -77,7 +77,7 @@ section.blk{display:flex;flex-direction:column;gap:12px;min-width:0}
 .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--panel)}
 table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
 th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap}
-th{font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:color-mix(in srgb,var(--bg) 60%,var(--panel))}
+th{font:500 11.5px var(--f-body);letter-spacing:.01em;color:var(--muted);background:color-mix(in srgb,var(--bg) 60%,var(--panel))}
 td:first-child,th:first-child{text-align:left}
 td.mono{font-family:var(--f-mono);font-size:12.5px}
 tr:last-child td{border-bottom:0}
@@ -149,6 +149,7 @@ code{font-family:var(--f-mono);font-size:.92em;background:var(--accent-soft);pad
 .an-read div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--grid);padding:3px 0}
 .an-read dt{color:var(--ink-2);white-space:nowrap}.an-read dd{margin:0;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 @media (max-width:760px){.anim-row{grid-template-columns:1fr}}
+#tbl-flow th,#tbl-flow td,#tbl-coup th,#tbl-coup td{padding:7px 8px}
 @media (max-width:980px){.layout{grid-template-columns:1fr}aside.rail{position:static;max-height:none}.grid2,.calc{grid-template-columns:1fr}}
 @media (max-width:640px){header.top{grid-template-columns:1fr}.findings{grid-template-columns:1fr}.calc .inputs{grid-template-columns:1fr 1fr}math{font-size:15px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -159,7 +160,7 @@ code{font-family:var(--f-mono);font-size:.92em;background:var(--accent-soft);pad
   <div>
     <div class="eyebrow">Analytical model · TLE493D-W2B6 measurements · 26 Oct 2026</div>
     <h1>Rotating field of an N20-driven diametric magnet</h1>
-    <p class="lede">An analytical model of the rotating field around the Ø6.35 × 12.70 mm diametric NdFeB magnet (K&amp;J D48DIA, N42, Br = 1.32 T) on your N20 motor, tested against a TLE493D Hall sensor. The strength comes from the manufacturer datasheet, so nothing is fitted to the measurements. Measured: 12, 20, 30 and 37 mm at 12 V, about 570 revolutions each.</p>
+    <p class="lede">An analytical model of the rotating field around the Ø6.35 × 12.70 mm diametric NdFeB magnet (K&amp;J D48DIA, N42, Br = 1.32 T) on your N20 motor, tested against a TLE493D Hall sensor. The strength comes from the manufacturer datasheet, so nothing is fitted to the measurements. Field measured at 12, 20, 30 and 37 mm at 12 V, about 570 revolutions each, and the pumped flow measured in nine dye runs at 12, 20 and 30 mm.</p>
     <div class="chips" id="chips"></div>
   </div>
   <div class="schem" aria-label="Schematic end view of magnet and sensor">
@@ -231,7 +232,7 @@ code{font-family:var(--f-mono);font-size:.92em;background:var(--accent-soft);pad
         <div class="panel-c"><span class="plabel">(c)</span><canvas id="cv-trace" aria-label="Predicted radial and tangential field over one revolution with measured points and a moving cursor"></canvas></div>
       </div>
       <dl class="an-read" id="an-read"></dl>
-      <p class="cap"><b>Figure 1 | Working principle, computed from the field model.</b> (a) Side view of the rig. The N20 gearmotor turns the K&amp;J D48DIA diametric magnet (red = north half, blue = south half). The impeller sits in the tube a distance d below the magnet's axis, and its two cube magnets lock to the local field, so it turns the opposite way and drives the dye from right to left. (b) End view from the magnet's free end. The black arrow is the magnet's moment <b>m</b>. The amber arrow is the field <b>B</b> at the impeller predicted by Eq. 2 for B<sub>r</sub> = 1.32 T, drawn to a fixed length scale per distance. Its tip traces the dashed ellipse, turning backwards and unevenly (Eq. 5). (c) The two field components at the impeller over one real revolution (18.4 ms at 54.3 Hz). Lines are the prediction and dots are the measured, phase-averaged TLE493D data at the same distance. Motion is slowed for display. The impeller, blade shape, cube size and flow speed are schematic; the magnet, distances and field are to scale and from the model.</p>
+      <p class="cap"><b>Figure 1 | Working principle, computed from the field model.</b> (a) Side view of the rig. The N20 gearmotor turns the K&amp;J D48DIA diametric magnet (red = north half, blue = south half). The impeller sits in the tube a distance d below the magnet's axis, and its two cube magnets follow the local field, so it turns the opposite way and drives the dye from right to left. (b) End view from the magnet's free end. The black arrow is the magnet's moment <b>m</b>. The amber arrow is the field <b>B</b> at the impeller predicted by Eq. 2 for B<sub>r</sub> = 1.32 T, drawn to a fixed length scale per distance. Its tip traces the dashed ellipse, turning backwards and unevenly (Eq. 5). (c) The two field components at the impeller over one real revolution (18.4 ms at 54.3 Hz). Lines are the prediction and dots are the measured, phase-averaged TLE493D data at the same distance. Motion is slowed for display. The magnet, impeller (Ø5 × 10 mm, 9 mm pitch, two 1.59 mm cubes), tube and distances are to scale. The impeller is drawn following the field with a 10° lag for illustration. Dye particles advance at the per-turn distance from the section 7 fit, shown 10× faster so the motion is visible; blade thickness and particle positions are schematic.</p>
     </div>
   </section>
 
@@ -317,10 +318,10 @@ code{font-family:var(--f-mono);font-size:.92em;background:var(--accent-soft);pad
       <div class="inputs">
         <label class="num"><span>Impeller distance from magnet axis (mm)</span><input type="number" id="c-r" value="20" min="5" max="200" step="0.5"></label>
         <label class="num"><span>Target minimum field (mT)</span><input type="number" id="c-tgt" value="5" min="0.05" max="200" step="0.5"></label>
-        <label class="num"><span>Cube edge a (mm), example</span><input type="number" id="c-a" value="3" min="0.5" max="20" step="0.5"></label>
-        <label class="num"><span>Cube polarization (T), example</span><input type="number" id="c-j" value="1.3" min="0.1" max="1.5" step="0.05"></label>
+        <label class="num"><span>Cube edge a (mm), K&amp;J B111</span><input type="number" id="c-a" value="1.59" min="0.2" max="20" step="0.01"></label>
+        <label class="num"><span>Cube remanence (T), N42</span><input type="number" id="c-j" value="1.32" min="0.1" max="1.5" step="0.01"></label>
         <label class="num"><span>Number of cubes</span><input type="number" id="c-n" value="2" min="1" max="10" step="1"></label>
-        <p class="hint" style="grid-column:1/-1">The cube size and grade are placeholder examples (two 3 mm N42 cubes). Enter your own. The calculation assumes the cubes' moments add and sit in the magnet's midplane. It ignores fluid drag, friction and the cubes' own interaction.</p>
+        <p class="hint" style="grid-column:1/-1">The impeller carries two K&amp;J B111 cubes (1/16 in = 1.59 mm, N42, Br = 1.32 T, 0.03 g each). The calculation assumes the cubes' moments add and sit in the magnet's midplane. It ignores fluid drag, friction and the cubes' own interaction.</p>
       </div>
       <dl class="out" id="c-out"></dl>
     </div>
@@ -329,14 +330,14 @@ code{font-family:var(--f-mono);font-size:.92em;background:var(--accent-soft);pad
   <section class="blk" id="physics">
     <div class="eyebrow">6 · Physics of the magnetic pump</div>
     <h2>From motor to dye: six links of physics</h2>
-    <p>In the simulator, the N20 motor spins the external magnet, the impeller inside the tube turns the opposite way, and dye moves from right to left. Each link in that chain is a physical law. Links 1 and 2 are checked directly by the sensor data. Links 3–6 combine the validated field with the impeller's magnets and geometry. Those use the example inputs below until you enter your real dimensions.</p>
+    <p>In the simulator, the N20 motor spins the external magnet, the impeller inside the tube turns the opposite way, and dye moves from right to left. Each link in that chain is a physical law. Links 1 and 2 are checked directly by the sensor data. Links 3–6 combine the validated field with the impeller's measured geometry: the 50% model is Ø5 × 10 mm with three helical blades and a 9 mm pitch (18 mm at full size), in a 6 mm tube, with two 1.59 mm N42 cubes. Only the rotor mass is an estimate. Section 7 tests links 5 and 6 against the dye measurements.</p>
     <div class="fig">
       <div class="calc" style="grid-template-columns:1fr">
         <div class="inputs" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
-          <label class="num"><span>Blade tip radius R<sub>b</sub> (mm), example</span><input type="number" id="p-rb" value="2.5" min="0.5" max="20" step="0.1"></label>
-          <label class="num"><span>Blade pitch p (mm), example</span><input type="number" id="p-pitch" value="10" min="1" max="100" step="0.5"></label>
-          <label class="num"><span>Rotor mass M (g), example</span><input type="number" id="p-mass" value="0.5" min="0.01" max="50" step="0.05"></label>
-          <label class="num"><span>Tube inner diameter (mm), example</span><input type="number" id="p-tube" value="6" min="1" max="50" step="0.5"></label>
+          <label class="num"><span>Blade tip radius R<sub>b</sub> (mm)</span><input type="number" id="p-rb" value="2.5" min="0.5" max="20" step="0.1"></label>
+          <label class="num"><span>Blade pitch p (mm), 50% model</span><input type="number" id="p-pitch" value="9" min="1" max="100" step="0.5"></label>
+          <label class="num"><span>Rotor mass M (g), estimate</span><input type="number" id="p-mass" value="0.12" min="0.01" max="50" step="0.01"></label>
+          <label class="num"><span>Tube inner diameter (mm)</span><input type="number" id="p-tube" value="6" min="1" max="50" step="0.5"></label>
         </div>
         <p class="hint">The impeller distance, cube size and cube grade come from section 5. Motor speed comes from the sample rate in section 7 divided by the measured samples per revolution. Fluid is water at 20 °C (ρ = 998 kg/m³, ν = 1.0 mm²/s).</p>
       </div>
@@ -348,23 +349,46 @@ code{font-family:var(--f-mono);font-size:.92em;background:var(--accent-soft);pad
       <p class="cap"><b>Figure 6 | The driving field turns at an uneven rate.</b> This is the rate at which the field direction at the sensor turns, relative to the magnet's rate, through one revolution. Dots come from the measured B<sub>y</sub> and B<sub>z</sub> at the distance chosen above Figure 3 or in Figure 1. The line is Eq. 5 with the model's κ. Below the magnet the field turns 1/κ ≈ 2 times faster than the magnet as the magnet passes sideways, and κ ≈ ½ as fast as it points at the sensor. That is the rhythm the impeller has to follow.</p>
     </div>
     <div class="fig">
-      <h3>Experiments that would test links 3–6</h3>
+      <h3>Experiments that test links 3–6</h3>
       <ol class="methods" style="margin:6px 0 0;padding-left:20px">
-        <li><b>Flow against motor speed.</b> Vary the motor voltage and time the dye front over a marked length. Link 5 predicts flow rising in proportion to speed until the impeller loses lock, then collapsing.</li>
-        <li><b>Loss of lock against distance.</b> Increase the gap and find where the impeller stops following. Link 3 predicts the critical load torque falls as r⁻³, using the field model tested in section 2.</li>
+        <li><b>Flow against motor speed and distance.</b> Done: nine dye runs, analysed in section 7.</li>
+        <li><b>Impeller speed.</b> Count blade passes per second in the 0.25× video for each run. This decides whether the coupling stays locked (link 3).</li>
+        <li><b>Loss of lock against distance.</b> Increase the gap until the impeller stops following. Link 3 predicts the critical load torque falls as r⁻³.</li>
         <li><b>Reverse the motor.</b> The impeller and the flow should both reverse. The flow rate need not be equal both ways, because the blades are not symmetric.</li>
         <li><b>Ramp the start.</b> Starting at full speed may fail where a slow ramp locks. That is the pull-in limit of link 3.</li>
       </ol>
     </div>
   </section>
 
+  <section class="blk" id="flow">
+    <div class="eyebrow">7 · Flow validation · dye-front measurements</div>
+    <h2>Nine dye runs and the coupling number that orders them</h2>
+    <p>The dye front was timed over the same 4.0 cm of tube in 0.25× video (speed × real time = 4.0 cm in every run) at three distances and three motor voltages. The magnet frequency was read from the same video. The impeller is the 50% model: Ø5 × 10 mm, three helical blades with a 9 mm pitch, in a 6 mm tube, carrying two K&amp;J B111 cubes (1.59 mm, N42).</p>
+    <div class="eq">
+      <div class="eqrow"><span class="eqn">(6)</span><div><math display="block"><mrow><msub><mi>v</mi><mi>ideal</mi></msub><mo>=</mo><mi>p</mi><mspace width="0.15em"/><mi>f</mi><mspace width="0.15em"/><msup><mrow><mo>(</mo><msub><mi>R</mi><mi>b</mi></msub><mo>/</mo><msub><mi>R</mi><mi>tube</mi></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>,</mo><mspace width="1.2em"/><mi>η</mi><mo>=</mo><mfrac><mi>v</mi><msub><mi>v</mi><mi>ideal</mi></msub></mfrac></mrow></math>
+        <p>A screw that turns exactly with the magnet and leaks nothing moves one pitch of fluid per turn through its swept area. That is <span id="fl-cp"></span> of tube length per turn. The measured fraction η is the pump's volumetric efficiency.</p></div></div>
+      <div class="eqrow"><span class="eqn">(7)</span><div><math display="block"><mrow><mi>Λ</mi><mo>=</mo><mfrac><mi>ω</mi><msub><mi>ω</mi><mi>n</mi></msub></mfrac><mo>=</mo><mn>2</mn><mi>π</mi><mi>f</mi><msqrt><mfrac><mi>I</mi><mrow><msub><mi>m</mi><mi>i</mi></msub><mspace width="0.1em"/><msub><mi>B</mi><mi>t</mi></msub><mo>(</mo><mi>d</mi><mo>)</mo></mrow></mfrac></msqrt><mo>,</mo><mspace width="1.2em"/><mi>η</mi><mo>=</mo><mi>C</mi><mspace width="0.1em"/><msup><mi>Λ</mi><mi>b</mi></msup></mrow></math>
+        <p>Λ compares the drive frequency with the natural frequency of the impeller's magnets in the weakest part of the field. B<sub>t</sub>(d) comes from the validated field model (Eq. 2), m<sub>i</sub> from the cube datasheet and I ≈ ½MR<sub>b</sub>² from the rotor mass. Below Λ ≈ 1 the impeller can follow the field's uneven rhythm. Above it, the impeller can no longer keep up with each turn of the field. C and b are fitted. The inertia I only rescales Λ, so its uncertainty changes neither b nor the quality of the fit.</p></div></div>
+    </div>
+    <div class="grid2">
+      <div class="fig"><div class="legend" id="leg7a"></div><div class="chart" id="ch-flow"></div></div>
+      <div class="fig"><div class="legend" id="leg7b"></div><div class="chart" id="ch-eta"></div></div>
+    </div>
+    <p class="cap" style="margin-top:-4px"><b>Figure 7 | Dye-front speed and pumping efficiency.</b> (a) Measured dye-front speed against magnet frequency at 12, 20 and 30 mm (markers). Solid lines come from Eq. 7 fitted to all nine runs. The grey dashed line is the locked-screw model of Eq. 6 with one constant efficiency, which predicts the same flow at every distance. (b) Efficiency η against the coupling number Λ on log–log axes. All nine runs fall near one line, though frequency alone does not order them (R² values in the findings below). Each run is one timing of a 4.0 cm dye front, so no error bars are available.</p>
+    <div class="tablewrap"><table id="tbl-flow"><thead><tr><th>Distance</th><th>Motor</th><th>f (Hz)</th><th>Dye speed (cm/s)</th><th>Advance per turn</th><th>η</th><th>Λ</th><th>Eq. 7 prediction* (cm/s)</th><th>Error</th><th>Locked-screw error*</th></tr></thead><tbody></tbody></table></div>
+    <p class="hint">* Each distance is predicted from a fit to the other two distances only, for both models.</p>
+    <div class="tablewrap"><table id="tbl-coup"><thead><tr><th>Distance</th><th>B<sub>r</sub> (mT)</th><th>B<sub>t</sub> (mT)</th><th>Max torque, weak / strong (µN·m)</th><th>Attraction (mN)</th><th>f<sub>n</sub> (Hz)</th><th>Λ at 8 / 10 / 12 V</th></tr></thead><tbody></tbody></table></div>
+    <p class="hint">The coupling table uses the validated field at the impeller's axis, the two B111 cubes (m<sub>i</sub> = <span id="fl-mi"></span> A·m²) and the rotor mass entered in section 6. The rotor mass is an estimate: 0.06 g of cubes from the datasheet plus about 0.06 g of printed impeller.</p>
+    <div class="findings" id="flow-find"></div>
+  </section>
+
   <section class="blk" id="methods">
-    <div class="eyebrow">7 · Methods</div>
+    <div class="eyebrow">8 · Methods</div>
     <h2>How the measured values were extracted</h2>
     <div class="fig">
       <div class="legend" id="leg5"></div>
       <div class="chart" id="ch-raw"></div>
-      <p class="cap"><b>Figure 7 | Raw sensor stream, first 92 samples at 12 mm.</b> The logger stores sample index only, with no timestamps. Each revolution spans about 18.3 samples.</p>
+      <p class="cap"><b>Figure 8 | Raw sensor stream, first 92 samples at 12 mm.</b> The logger stores sample index only, with no timestamps. Each revolution spans about 18.3 samples.</p>
     </div>
     <ol class="methods">
       <li>Each CSV (Infineon 3D-sensor GUI, master-controlled mode, 0.13 mT/LSB) was split into revolutions at the upward zero crossings of B<sub>z</sub>, with linear interpolation between samples.</li>
@@ -572,7 +596,7 @@ function update(){
   $('readout').innerHTML=`<dt>J<sub>eff</sub></dt><dd>${J.toFixed(3)} T</dd><dt>moment m</dt><dd>${mom.toFixed(3)} A·m²</dd><dt>mean |err| B<sub>r</sub></dt><dd>${fmt(mae,1)} %</dd><dt>mean |err| B<sub>t</sub></dt><dd>${fmt(btErr,1)} %</dd>`;
   const calTxt=S.cal==='datasheet'?'Br = '+S.Br.toFixed(2)+' T from datasheet, nothing fitted':S.cal==='all'?'fit to all four':S.cal==='manual'?'J set by hand':`calibrated at ${S.cal} mm`;
   $('chips').innerHTML=`<span class="chip"><b>${S.model==='dipole'?'Point dipole':'Finite cylinder'}</b> · ${calTxt}</span><span class="chip ${mae<=10?'good':'warn'}">B<sub>r</sub> predictions: <b>${isFinite(mae)?mae.toFixed(1)+'% mean error':'–'}</b></span><span class="chip">J<sub>eff</sub> = <b>${J.toFixed(2)} T</b> · m = <b>${mom.toFixed(3)} A·m²</b></span>`;
-  drawAmp(J);drawWave(J);drawEll(J);drawRatio();drawCalc(J);drawPhysics(J);updateNotes();if(typeof AN!=='undefined')AN.dirty=true;
+  drawAmp(J);drawWave(J);drawEll(J);drawRatio();drawCalc(J);drawPhysics(J);updateNotes();drawFlow(J);if(typeof AN!=='undefined')AN.dirty=true;
   legends();
 }
 function legends(){
@@ -619,29 +643,29 @@ function drawPhysics(J){
    ['1','Drive','m','The motor turns the magnet at f',
     `The sensor sees ${pm.toFixed(2)} samples per revolution at ${fs} samples/s, so the magnet turns at f = ${f.toFixed(1)} Hz (${(60*f).toFixed(0)} rpm). At this frequency the field is quasi-static. The electromagnetic skin depth in water is hundreds of metres, so the field passes through the water and the plastic tube unchanged, and the static field model of section 2 applies inside the tube.`,
     'δ = 1/√(π f μ₀ σ),  σ_water ≈ 0.05 S/m',
-    [['Shaft frequency f',f.toFixed(1)+' Hz'],['Skin depth in water',skin.toFixed(0)+' m']]],
+    [['Shaft frequency f (sensor)',f.toFixed(1)+' Hz'],['Shaft frequency at 12 V (video)','53.77 Hz'],['Skin depth in water',skin.toFixed(0)+' m']]],
    ['2','Counter-rotation','v','Below the magnet, the field turns backwards',
     `For a moment m = m(sin θ, cos θ) turning in the y–z plane, the dipole field directly below it is B ∝ (−sin θ, 2 cos θ). Its direction angle is φ = −atan(κ tan θ) with κ = ${kap.toFixed(2)}. As θ increases, φ decreases, so the field under the magnet rotates opposite to the magnet. The simple picture is meshed gears. The underside of the external magnet sweeps one way, and the near pole of the impeller is pulled along with it, so the impeller spins the other way. This is exactly what the simulator shows. The sensor confirms the ellipse and its κ (Figures 4 and 6).`,
     'φ(θ) = −atan(κ tan θ),   dφ/dθ = −κ / (cos²θ + κ² sin²θ)     (5)',
     [['Field turning rate, slowest',kap.toFixed(2)+' × magnet'],['Field turning rate, fastest',(1/kap).toFixed(2)+' × magnet']]],
-   ['3','Torque and lock','e','The impeller follows the field with a lag',
+   ['3','Torque and lock','i','The impeller follows the field with a lag',
     `The impeller's magnets (moment m<sub>i</sub>) feel τ = m<sub>i</sub> × B = m<sub>i</sub>|B| sin δ, where δ is the lag behind the field. In steady running the lag grows until the magnetic torque equals the fluid and friction load. Because |B| swings between B<sub>t</sub> and B<sub>r</sub>, the safe upper limit on load is m<sub>i</sub>B<sub>t</sub>. Inertia matters too. A rotor that kept a perfectly steady speed would see its lag wobble by ±${dev.toFixed(1)}° twice per turn. A light rotor instead speeds up and slows down with the field, which takes up to I·ω²·max|φ″| of torque. The ratio ω/ω<sub>n</sub>, with ω<sub>n</sub> = √(m<sub>i</sub>B<sub>t</sub>/I), says which case applies. It also sets the start-up (pull-in) limit: from rest, the impeller can only lock if the drive is not much faster than ω<sub>n</sub>.`,
     'τ = m_i |B| sin δ ;  ω_n = √(m_i B_t / I) ;  I ≈ ½ M R_b²',
     [['Max torque, weakest phase',(tMin*1e6).toFixed(0)+' µN·m'],['Max torque, strongest phase',(tMax*1e6).toFixed(0)+' µN·m'],['Torque to follow field rhythm',(tInert*1e6).toFixed(0)+' µN·m'],['ω / ω_n',(w/wn).toFixed(2)+(w/wn>1?' (ramp the start)':' (locks directly)')]]],
-   ['4','Attraction','e','The impeller is also pulled toward the magnet',
+   ['4','Attraction','g','The impeller is also pulled toward the magnet',
     `A dipole in a non-uniform field feels a force F = ∇(m<sub>i</sub>·B). With the impeller locked and aligned with B, this pulls it toward the external magnet, with magnitude about 3m<sub>i</sub>|B|/r because the field falls as r⁻³. The force presses the impeller against the upper tube wall or its bearing, adding friction torque. Because |B| varies twice per turn, the force pulses at 2f, which can cause vibration.`,
     'F ≈ 3 m_i |B| / r   (pulsing at 2f)',
     [['Attraction force, peak',(F*1e3).toFixed(1)+' mN'],['Rotor weight Mg',(Wt*1e3).toFixed(2)+' mN'],['Force / weight',(F/Wt).toFixed(0)+'×']]],
-   ['5','Pumping','e','Rotating blades push the fluid along the tube',
-    `The blade tips move at U = ωR<sub>b</sub>. At this Reynolds number the flow is inertial, not viscous, so the blades act like a small axial pump. Euler's turbomachine equation gives the pressure rise as Δp ≈ ρU·Δc<sub>θ</sub>, of order ½ρU². The blade handedness combined with the rotation sense decides the flow direction, which is why the dye moves right to left and should reverse with the motor. The fluid leaves with swirl, and its angular-momentum flux ρQR<sub>b</sub>c<sub>θ</sub> is the load torque the magnet must supply in link 3. A screw with no leakage would move one pitch of fluid per turn. That ideal Q is an upper bound, and the measured-to-ideal ratio is the slip you can measure from the dye.`,
+   ['5','Pumping','f','Rotating blades push the fluid along the tube',
+    `The blade tips move at U = ωR<sub>b</sub>. At this Reynolds number the flow is inertial, not viscous, so the blades act like a small axial pump. Euler's turbomachine equation gives the pressure rise as Δp ≈ ρU·Δc<sub>θ</sub>, of order ½ρU². The blade handedness combined with the rotation sense decides the flow direction, which is why the dye moves right to left and should reverse with the motor. The fluid leaves with swirl, and its angular-momentum flux ρQR<sub>b</sub>c<sub>θ</sub> is the load torque the magnet must supply in link 3. A screw with no leakage would move one pitch of fluid per turn. That ideal Q is an upper bound. The dye runs in section 7 reach only 13–22% of it, and the shortfall depends on distance.`,
     'Δp ≈ ρ U c_θ ;  Q_ideal = p · f · πR_b² ;  τ_fluid ≈ ρ Q R_b c_θ',
     [['Blade tip speed U',U.toFixed(2)+' m/s'],['Reynolds number 2UR_b/ν',Re.toFixed(0)],['Pressure scale ½ρU²',dp.toFixed(0)+' Pa'],['Ideal flow (upper bound)',(Qid*6e7).toFixed(0)+' mL/min'],['Fluid torque at ideal flow',(tFl*1e6).toFixed(0)+' µN·m']]],
-   ['6','Dye transport','e','The dye shows where the water goes',
+   ['6','Dye transport','f','The dye shows where the water goes',
     `The dye's molecular diffusivity (D ≈ 5×10⁻¹⁰ m²/s) is tiny compared with advection. Even at only 1 cm/s the Péclet number is about 10⁵, so the dye is carried by the flow and barely spreads by diffusion. Its front speed is therefore a direct measurement of the mean flow, Q = V·A<sub>tube</sub>. Helical streaks downstream reveal the swirl left by the blades.`,
     'Pe = V · D_tube / D_dye',
-    [['Péclet number at V = 1 cm/s',e(0.01*Dt/5e-10)],['Mean velocity at ideal flow',(Vid*100).toFixed(1)+' cm/s']]],
+    [['Péclet number at V = 1 cm/s',e(0.01*Dt/5e-10)],['Mean velocity at ideal flow',(Vid*100).toFixed(1)+' cm/s'],['Measured dye speed','3.15–5.52 cm/s']]],
   ];
-  const tag={m:['m','measured'],v:['v','validated model'],e:['','estimate, example geometry']};
+  const tag={m:['m','measured'],v:['v','validated model'],g:['v','measured geometry'],i:['','estimated inertia'],f:['m','tested in section 7']};
   box.innerHTML=L.map(([no,short,src,h,p,eq,vals])=>`<div class="link"><div class="hd"><span class="no">${no}</span><h3>${short}: ${h}</h3><span class="src ${tag[src][0]}">${tag[src][1]}</span></div><p>${p}</p><div class="eqline">${eq}</div><dl class="vals">${vals.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></div>`).join('');
   drawOmega(J);
 }
@@ -693,7 +717,7 @@ const ev2a=psi=>Math.atan2(-Math.cos(psi),Math.sin(psi)); /* end-view direction 
 
 /* ---- (a) side view ---- */
 function drawSide(st){
-  const cv=$('cv-side');const R=S.D/2,L=S.L,Rt=3.2,Ri=2.9,dmax=37;const pw=Math.max(260,Math.floor(cv.parentElement.clientWidth));const narrow=pw<560;
+  const cv=$('cv-side');const R=S.D/2,L=S.L,Rt=(+$('p-tube').value||6)/2+0.5,Ri=(+$('p-tube').value||6)/2,dmax=37;const pw=Math.max(260,Math.floor(cv.parentElement.clientWidth));const narrow=pw<560;
   const s=Math.max(3,Math.min((360-104)/(R+dmax+Rt+1),(pw-40)/(L+34+30)));
   const {c,w,h}=cvSetup(cv,Math.round(44+(R+dmax+Rt)*s+(narrow?92:78)));
   const X0=Math.max(w*0.46,(L/2+31)*s+22),Y0=44+R*s,Yt=Y0+st.d*s;
@@ -721,14 +745,14 @@ function drawSide(st){
   c.fillStyle=PAL.tube;c.fillRect(4,tubeTop,w-8,tubeBot-tubeTop);
   const pdraw=front=>{AN.parts.forEach(q=>{const z=q.r*Math.sin(q.a);if((z>=0)!==front)return;const p=P(q.x,-st.d+q.r*Math.cos(q.a),z);if(p[0]<6||p[0]>w-6)return;c.globalAlpha=front?0.95:0.45;c.fillStyle=PAL.flow;c.beginPath();c.arc(p[0],p[1],front?2.3:1.8,0,2*Math.PI);c.fill();});c.globalAlpha=1;};
   pdraw(false);
-  const ar=ev2a(st.robot),IL=7,hub=0.9,tip=Ri-0.25;
+  const ar=ev2a(st.robot),IL=5,hub=0.6,tip=Math.min(Ri-0.05,+$('p-rb').value||2.5),twist=2*Math.PI*2*IL/(+$('p-pitch').value||9);
   {const a=P(-IL-2.5,-st.d,0),b=P(IL+2.5,-st.d,0);c.strokeStyle=PAL['blade-dark'];c.lineWidth=Math.max(1.5,0.5*s);c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();}
-  const bl=[];for(let k=0;k<3;k++)for(let j=0;j<28;j++){const q=j/28,Q=(j+1)/28,a=ar+k*2*Math.PI/3+q*1.7,A=ar+k*2*Math.PI/3+Q*1.7,x1=-IL+2*IL*q,x2=-IL+2*IL*Q;
+  const bl=[];for(let k=0;k<3;k++)for(let j=0;j<28;j++){const q=j/28,Q=(j+1)/28,a=ar+k*2*Math.PI/3+q*twist,A=ar+k*2*Math.PI/3+Q*twist,x1=-IL+2*IL*q,x2=-IL+2*IL*Q;
     const p=[[x1,-st.d+hub*Math.cos(a),hub*Math.sin(a)],[x1,-st.d+tip*Math.cos(a),tip*Math.sin(a)],[x2,-st.d+tip*Math.cos(A),tip*Math.sin(A)],[x2,-st.d+hub*Math.cos(A),hub*Math.sin(A)]];bl.push({p,z:(Math.sin(a)+Math.sin(A))/2});}
   const back=bl.filter(f=>f.z<0).sort((a,b)=>a.z-b.z),fr=bl.filter(f=>f.z>=0).sort((a,b)=>a.z-b.z);
   back.forEach(f=>poly(f.p,PAL['blade-dark'],PAL['blade-dark'],0.4));
   /* two cube magnets on the shaft; north faces point along the impeller angle */
-  const e=2.1,hh=e/2,cubeF=[];
+  const e=+$('c-a').value||1.59,hh=e/2,cubeF=[];
   for(let k=0;k<2;k++){const x1=-e+k*e,x2=x1+e;const loc=[[x1,-hh,-hh],[x2,-hh,-hh],[x2,hh,-hh],[x1,hh,-hh],[x1,-hh,hh],[x2,-hh,hh],[x2,hh,hh],[x1,hh,hh]];
     const v=loc.map(([x,u,w2])=>[x,-st.d+u*Math.cos(ar)-w2*Math.sin(ar),u*Math.sin(ar)+w2*Math.cos(ar)]);
     [[[3,2,6,7],PAL.north],[[0,1,5,4],PAL.south],[[0,3,7,4],PAL.metal],[[1,2,6,5],PAL.metal],[[4,5,6,7],PAL.metal],[[0,1,2,3],PAL.metal]].forEach(([ix,col])=>{const p=ix.map(i=>v[i]);cubeF.push({p,col,z:p.reduce((a,q)=>a+q[2],0)/4});});}
@@ -749,17 +773,17 @@ function drawSide(st){
   const fy=Math.min(h-34,imp[1]+36),fl=AN.dir<0;
   carrow(c,fl?w*0.30:w*0.12,fy,fl?w*0.12:w*0.30,fy,PAL.flow,2,8);carrow(c,fl?w*0.95:w*0.75,fy,fl?w*0.75:w*0.95,fy,PAL.flow,2,8);
   ctext(c,fl?'outlet':'inlet',w*0.21,fy+13,{size:11,color:PAL.muted,align:'center'});ctext(c,fl?'inlet':'outlet',w*0.85,fy+13,{size:11,color:PAL.muted,align:'center'});
-  ctext(c,fl?'← dye flow':'dye flow →',w*0.53+ (imp[0]>w*0.4&&imp[0]<w*0.66?0:0),fy,{size:12,weight:600,color:PAL.flow,align:'center'});
+  ctext(c,fl?'← dye flow (10× faster)':'dye flow (10× faster) →',w*0.53+ (imp[0]>w*0.4&&imp[0]<w*0.66?0:0),fy,{size:12,weight:600,color:PAL.flow,align:'center'});
   {const sb=5*s,x0=14,y0=h-14;c.strokeStyle=PAL.ink;c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x0+sb,y0);c.moveTo(x0,y0-4);c.lineTo(x0,y0+4);c.moveTo(x0+sb,y0-4);c.lineTo(x0+sb,y0+4);c.stroke();ctext(c,'5 mm',x0+sb+6,y0,{mono:true,size:11,color:PAL['ink-2']});ctext(c,narrow?'to scale':'magnet, distance and tube to scale',w-12,h-14,{size:10.5,color:PAL.muted,align:'right'});}
   /* particle advection (schematic speed, observed direction) */
-  if(AN.dt>0){const v=(AN.dir<0?-1:1)*16*AN.rate;AN.parts.forEach(q=>{q.x+=v*AN.dt;q.a+=-AN.dir*2*Math.PI*AN.rate*AN.dt*0.35*(Math.abs(q.x)<IL+3?1:0.4);if(q.x<xl)q.x+=xr-xl;if(q.x>xr)q.x-=xr-xl;});}
+  if(AN.dt>0){const adv=(FLOW&&st.d<=37)?FLOW.vOf(st.d,53.77)/53.77*10:1;const v=(AN.dir<0?-1:1)*adv*10*AN.rate;AN.parts.forEach(q=>{q.x+=v*AN.dt;q.a+=-AN.dir*2*Math.PI*AN.rate*AN.dt*0.35*(Math.abs(q.x)<IL+3?1:0.4);if(q.x<xl)q.x+=xr-xl;if(q.x>xr)q.x-=xr-xl;});}
   AN.xl=xl;AN.xr=xr;
 }
 
 /* ---- (b) end view ---- */
 function drawEnd(st){
   const cv=$('cv-end');const {c,w,h}=cvSetup(cv,330);
-  const R=S.D/2,Rt=3.2,top=60,dmax=37,Lb0=Math.min(62,w*0.16);
+  const R=S.D/2,Rt=(+$('p-tube').value||6)/2,top=60,dmax=37,Lb0=Math.min(62,w*0.16);
   const s=(h-top-Lb0-14)/(R+dmax);const Lb=Math.max(26,Math.min(Lb0,st.d*s-Math.max(10,R*s)-8));const cx=w*0.5,cy=top+R*s,ry=cy+st.d*s;
   const rm=Math.max(10,R*s),rt=Math.max(12,Rt*s);
   if(AN.endW!==w||AN.endD!==st.d){AN.trail=[];AN.endW=w;AN.endD=st.d;}
@@ -852,6 +876,71 @@ function anInit(){
   requestAnimationFrame(anLoop);
 }
 
+
+/* ---------- Section 7: dye-front flow validation ---------- */
+const FLOWDATA=[[12,8,34.20,3.35,0.838,4.78],[12,10,43.30,3.18,0.795,5.03],[12,12,53.77,2.90,0.725,5.52],[20,8,34.20,4.52,1.130,3.54],[20,10,43.30,4.04,1.010,3.96],[20,12,53.77,3.35,0.838,4.78],[30,8,34.20,5.08,1.270,3.15],[30,10,43.30,4.36,1.090,3.67],[30,12,53.77,3.66,0.915,4.37]];
+const FD=[12,20,30],FF=[34.20,43.30,53.77];
+let FLOW=null;
+function flowCompute(J){
+  const Rb=+$('p-rb').value,p=+$('p-pitch').value,Rt=(+$('p-tube').value)/2,M=+$('p-mass').value*1e-3;
+  const a=+$('c-a').value*1e-3,jc=+$('c-j').value,n=+$('c-n').value;
+  if(!(Rb>0&&p>0&&Rt>0&&M>0&&a>0&&jc>0&&n>0&&J>0))return null;
+  const mi=n*jc*a**3/(4e-7*Math.PI),I=0.5*M*(Rb*1e-3)**2,cp=p*(Rb/Rt)**2/10;
+  const Bt=d=>J*perJ(rOf(d))[1]*1e-3,Bq=d=>J*perJ(rOf(d))[0]*1e-3;
+  const lam=(d,f)=>2*Math.PI*f*Math.sqrt(I/(mi*Bt(d)));
+  const pts=FLOWDATA.map(([d,V,f,obs,t,v])=>({d,V,f,obs,t,v,L:lam(d,f),eta:v/(cp*f)}));
+  const fit=(sub,xk)=>{const x=sub.map(q=>Math.log(xk(q))),y=sub.map(q=>Math.log(q.eta));const mx=x.reduce((s,v)=>s+v,0)/x.length,my=y.reduce((s,v)=>s+v,0)/y.length;let sxy=0,sxx=0,syy=0;x.forEach((v,i)=>{sxy+=(v-mx)*(y[i]-my);sxx+=(v-mx)**2;syy+=(y[i]-my)**2;});const b=sxy/sxx,a0=my-b*mx;let ss=0;x.forEach((v,i)=>{ss+=(y[i]-(a0+b*v))**2;});return{a:a0,b,r2:1-ss/syy};};
+  const g=fit(pts,q=>q.L),gf=fit(pts,q=>q.f);
+  pts.forEach(q=>{const h=fit(pts.filter(o=>o.d!==q.d),o=>o.L);q.vLoo=Math.exp(h.a)*q.L**h.b*cp*q.f;q.eLoo=(q.vLoo/q.v-1)*100;q.vFit=Math.exp(g.a)*q.L**g.b*cp*q.f;});
+  const etaC=Math.exp(pts.reduce((s,q)=>s+Math.log(q.eta),0)/pts.length);
+  pts.forEach(q=>{const o=pts.filter(x=>x.d!==q.d);const ec=Math.exp(o.reduce((s,x)=>s+Math.log(x.eta),0)/o.length);q.vC=ec*cp*q.f;q.eC=(q.vC/q.v-1)*100;q.eFit=(q.vFit/q.v-1)*100;});
+  const mae=pts.reduce((s,q)=>s+Math.abs(q.eLoo),0)/pts.length,maeC=pts.reduce((s,q)=>s+Math.abs(q.eC),0)/pts.length,maeFit=pts.reduce((s,q)=>s+Math.abs(q.eFit),0)/pts.length;
+  const vOf=(d,f)=>Math.exp(g.a)*lam(d,f)**g.b*cp*f;
+  return{mi,I,cp,Bt,Bq,lam,pts,g,gf,etaC,mae,maeC,maeFit,vOf};
+}
+function drawFlow(J){
+  FLOW=flowCompute(J);if(!FLOW)return;const F=FLOW;
+  const sh={12:'circle',20:'square',30:'triangle'},col={12:'--s1',20:'--s2',30:'--s3'};
+  const mark=(svg,x,y,d,r)=>{const c=`var(${col[d]})`;if(sh[d]==='circle')return el('circle',{cx:x,cy:y,r,fill:'var(--panel)',stroke:c,'stroke-width':2},svg);if(sh[d]==='square')return el('rect',{x:x-r,y:y-r,width:2*r,height:2*r,fill:'var(--panel)',stroke:c,'stroke-width':2},svg);return el('path',{d:`M${x} ${y-r*1.2}L${x+r*1.1} ${y+r*0.8}L${x-r*1.1} ${y+r*0.8}Z`,fill:'var(--panel)',stroke:c,'stroke-width':2},svg);};
+  /* (a) speed vs frequency */
+  {const host=$('ch-flow');const {svg,W,H}=frame(host,300);svg.setAttribute('aria-label','Dye-front speed versus magnet frequency');
+   const m={l:44,r:56,t:12,b:38},x0=30,x1=58,y0=0,y1=7;const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r),Y=v=>m.t+(y1-v)/(y1-y0)*(H-m.t-m.b);
+   for(let v=0;v<=7;v++){el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:v?'var(--grid)':'var(--rule)'},svg);txt(svg,m.l-6,Y(v)+4,v,'tick',{'text-anchor':'end'});}
+   [30,35,40,45,50,55].forEach(v=>txt(svg,X(v),H-m.b+16,v,'tick',{'text-anchor':'middle'}));
+   txt(svg,(m.l+W-m.r)/2,H-4,'magnet frequency f (Hz)','axl',{'text-anchor':'middle'});
+   txt(svg,12,(m.t+H-m.b)/2,'dye-front speed (cm/s)','axl',{'text-anchor':'middle',transform:`rotate(-90 12 ${(m.t+H-m.b)/2})`});
+   el('path',{d:`M${X(x0)} ${Y(F.etaC*F.cp*x0)}L${X(x1)} ${Y(F.etaC*F.cp*x1)}`,stroke:'var(--muted)','stroke-width':1.6,'stroke-dasharray':'6 4',fill:'none'},svg);
+   FD.forEach(d=>{let p='';for(let i=0;i<=40;i++){const f=32+i*24/40;p+=(i?'L':'M')+X(f)+' '+Y(F.vOf(d,f));}el('path',{d:p,fill:'none',stroke:`var(${col[d]})`,'stroke-width':2},svg);
+     txt(svg,X(56)+4,Y(F.vOf(d,56))+4,d+' mm','dl',{fill:`var(${col[d]})`});});
+   F.pts.forEach(q=>{const cx=X(q.f),cy=Y(q.v);mark(svg,cx,cy,q.d,4.5);const h=el('circle',{cx,cy,r:12,fill:'transparent'},svg);h.addEventListener('pointerenter',()=>showTip(host,cx,cy-6,`${q.d} mm · ${q.V} V · ${q.f} Hz<br>measured ${q.v.toFixed(2)} cm/s<br>model ${q.vFit.toFixed(2)} cm/s (all-nine fit)`));h.addEventListener('pointerleave',hideTip);});}
+  /* (b) efficiency vs coupling number */
+  {const host=$('ch-eta');const {svg,W,H}=frame(host,300);svg.setAttribute('aria-label','Pumping efficiency versus coupling number on log axes');
+   const Ls=F.pts.map(q=>q.L);const lx0=Math.min(...Ls)/1.4,lx1=Math.max(...Ls)*1.4,ly0=0.1,ly1=0.3;
+   const m={l:58,r:14,t:12,b:38};const X=v=>m.l+(Math.log(v)-Math.log(lx0))/(Math.log(lx1)-Math.log(lx0))*(W-m.l-m.r),Y=v=>m.t+(Math.log(ly1)-Math.log(v))/(Math.log(ly1)-Math.log(ly0))*(H-m.t-m.b);
+   [0.1,0.15,0.2,0.25,0.3].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:'var(--grid)'},svg);txt(svg,m.l-6,Y(v)+4,v.toFixed(2),'tick',{'text-anchor':'end'});});
+   [0.1,0.2,0.3,0.5,1,2,3,5,10,20,50].filter(v=>v>=lx0&&v<=lx1).forEach(v=>{el('line',{y1:m.t,y2:H-m.b,x1:X(v),x2:X(v),stroke:v===1?'var(--rule)':'var(--grid)'},svg);txt(svg,X(v),H-m.b+16,v,'tick',{'text-anchor':'middle'});});
+   {const t=txt(svg,(m.l+W-m.r)/2,H-4,'coupling number Λ = ω / ω','axl',{'text-anchor':'middle'});const sp=el('tspan',{'baseline-shift':'sub','font-size':'9'},t);sp.textContent='n';}
+   txt(svg,12,(m.t+H-m.b)/2,'efficiency η','axl',{'text-anchor':'middle',transform:`rotate(-90 12 ${(m.t+H-m.b)/2})`});
+   el('path',{d:`M${X(lx0)} ${Y(Math.exp(F.g.a)*lx0**F.g.b)}L${X(lx1)} ${Y(Math.exp(F.g.a)*lx1**F.g.b)}`,stroke:'var(--accent)','stroke-width':2,fill:'none'},svg);
+   {const t=txt(svg,W-m.r-4,m.t+14,`η = ${Math.exp(F.g.a).toFixed(3)} Λ`,'tick',{'text-anchor':'end',fill:'var(--accent)'});const sp=el('tspan',{'baseline-shift':'super','font-size':'9'},t);sp.textContent=F.g.b.toFixed(2);const r=el('tspan',{},t);r.textContent=`   R² = ${F.g.r2.toFixed(2)}`;}
+   F.pts.forEach(q=>{const cx=X(q.L),cy=Y(q.eta);mark(svg,cx,cy,q.d,4.5);const h=el('circle',{cx,cy,r:12,fill:'transparent'},svg);h.addEventListener('pointerenter',()=>showTip(host,cx,cy-6,`${q.d} mm · ${q.f} Hz<br>Λ = ${q.L.toFixed(2)} · η = ${q.eta.toFixed(3)}`));h.addEventListener('pointerleave',hideTip);});}
+  const lg=`${FD.map(d=>`<span><i class="sw-line" style="border-color:var(${col[d]})"></i>${d} mm</span>`).join('')}`;
+  $('leg7a').innerHTML=`<b style="font-family:var(--f-display)">(a)</b>`+lg+`<span><i class="sw-dash" style="border-color:var(--muted)"></i>locked screw</span>`;
+  $('leg7b').innerHTML=`<b style="font-family:var(--f-display)">(b)</b>`+FD.map(d=>`<span style="color:var(${col[d]})">${sh[d]==='circle'?'○':sh[d]==='square'?'□':'△'}</span><span style="margin-left:-12px">${d} mm</span>`).join('')+`<span><i class="sw-line" style="border-color:var(--accent)"></i>fit, Eq. 7</span>`;
+  $('fl-cp').textContent=(F.cp*10).toFixed(2)+' mm';$('fl-mi').textContent=F.mi.toExponential(2).replace('e-3','×10⁻³');
+  const tb=document.querySelector('#tbl-flow tbody');tb.innerHTML=F.pts.map(q=>`<tr><td class="mono">${q.d} mm</td><td class="mono">${q.V} V</td><td class="mono">${q.f.toFixed(2)}</td><td class="mono">${q.v.toFixed(2)}</td><td class="mono">${(q.v/q.f*10).toFixed(2)} mm</td><td class="mono">${q.eta.toFixed(3)}</td><td class="mono">${q.L.toFixed(2)}</td><td class="mono">${q.vLoo.toFixed(2)}</td><td class="err ${errCls(q.eLoo)}">${sgn(q.eLoo)}</td><td class="err ${errCls(q.eC)}">${sgn(q.eC)}</td></tr>`).join('');
+  const tc=document.querySelector('#tbl-coup tbody');tc.innerHTML=FD.map(d=>{const bt=F.Bt(d),bq=F.Bq(d);return `<tr><td class="mono">${d} mm</td><td class="mono">${(bq*1e3).toFixed(2)}</td><td class="mono">${(bt*1e3).toFixed(2)}</td><td class="mono">${(F.mi*bt*1e6).toFixed(0)} / ${(F.mi*bq*1e6).toFixed(0)}</td><td class="mono">${(3*F.mi*bq/(d*1e-3)*1e3).toFixed(1)}</td><td class="mono">${(Math.sqrt(F.mi*bt/F.I)/(2*Math.PI)).toFixed(0)}</td><td class="mono">${FF.map(f=>F.lam(d,f).toFixed(2)).join(' / ')}</td></tr>`;}).join('');
+  const per=DIST.map(d=>DATA[d].period[0]);const pm=per.reduce((a,b)=>a+b)/per.length;const fs=+$('in-fs').value||1003,fsens=fs/pm;
+  const vr=F.pts.map(q=>q.v/q.f*10),ex=d=>{const a=F.pts.filter(q=>q.d===d);return Math.log(a[2].v/a[0].v)/Math.log(a[2].f/a[0].f);};
+  const C=[
+   ['g','Cross-check',`Motor frequency agrees to ${Math.abs((fsens/53.77-1)*100).toFixed(1)}% between video and sensor`,`At 12 V the video gives 53.77 Hz. The sensor gives ${fsens.toFixed(2)} Hz (${pm.toFixed(2)} samples per turn at ${fs} samples/s), recorded at the same voltage on a different day. The frequency rises nearly in proportion to voltage (${(34.2/8).toFixed(2)}, ${(43.3/10).toFixed(2)} and ${(53.77/12).toFixed(2)} Hz/V), as expected for a lightly loaded DC motor.`],
+   ['w','Rejected',`A locked screw with one efficiency does not fit`,`The dye moves ${Math.min(...vr).toFixed(2)}–${Math.max(...vr).toFixed(2)} mm per turn, ${(Math.min(...F.pts.map(q=>q.eta))*100).toFixed(0)}–${(Math.max(...F.pts.map(q=>q.eta))*100).toFixed(0)}% of the ideal ${(F.cp*10).toFixed(2)} mm. If the impeller turned exactly with the magnet at one efficiency, the speed would be proportional to f and the same at every distance. Instead, speed grows only as f<sup>${ex(12).toFixed(2)}</sup>, f<sup>${ex(20).toFixed(2)}</sup> and f<sup>${ex(30).toFixed(2)}</sup> at 12, 20 and 30 mm, and falls with distance at every frequency. The fluid and impeller are the same in every run, so the distance effect has to enter through the magnetic coupling.`],
+   ['g','Predictive',`The coupling number Λ orders all nine runs (R² = ${F.g.r2.toFixed(2)})`,`On log axes, η = ${Math.exp(F.g.a).toFixed(3)} Λ<sup>${F.g.b.toFixed(2)}</sup> with R² = ${F.g.r2.toFixed(2)}, against R² = ${F.gf.r2.toFixed(2)} using frequency alone. Λ uses B<sub>t</sub>(d) from the validated field model, which is the only link to distance. Fitted to all nine runs, Eq. 7 reproduces the speeds with a mean error of ${F.maeFit.toFixed(1)}%. Fitting two distances and predicting the third gives a mean error of ${F.mae.toFixed(1)}% (worst ${sgn(F.pts.reduce((m,q)=>Math.abs(q.eLoo)>Math.abs(m)?q.eLoo:m,0))}), compared with ${F.maeC.toFixed(1)}% for the locked screw under the same test. Efficiency is highest where the impeller can follow the field (Λ below about 1) and falls as Λ grows.`],
+   ['w','Next measurement','Count the impeller\'s turns in the 0.25× video',`Λ crosses 1 within this data set (${F.pts[0].L.toFixed(2)} at 12 mm, 8 V to ${F.pts[8].L.toFixed(2)} at 30 mm, 12 V, with the estimated inertia). Steady magnetic torque is not the limit: even at 30 mm the weakest-phase torque (${(F.mi*F.Bt(30)*1e6).toFixed(0)} µN·m) is well above the fluid torque, estimated at a few µN·m at the measured flow (link 5). The attraction force (${(3*F.mi*F.Bq(12)/0.012*1e3).toFixed(0)} mN at 12 mm, falling to ${(3*F.mi*F.Bq(30)/0.03*1e3).toFixed(1)} mN at 30 mm) is the other quantity that changes with distance. Counting blade passes per second in the slowed video would show whether the impeller turns at f in every run. If it does, the coupling is locked and the distance effect must come from the attraction force pressing the impeller against the wall. If it turns slower, the coupling is slipping.`]
+  ];
+  $('flow-find').innerHTML=C.map(([c,t,h,b])=>`<div class="finding"><div class="tag ${c}">${t}</div><h3>${h}</h3><p>${b}</p></div>`).join('');
+}
+
 /* ---------- static findings (computed from the data) ---------- */
 function findings(){
   const keep={...S};S.model='finite';S.D=6.35;S.L=12.7;S.ref='axis';S.align=false;cache.clear();
@@ -863,7 +952,7 @@ function findings(){
   const dip20=DATA[12].major[0]*Math.pow(12/20,3),dip20c=DATA[12].major[0]*Math.pow(12/(20/Math.cos(DATA[20].tilt[0]*Math.PI/180)),3);
   const within5=DIST.filter(d=>Math.abs(er(d))<=5).length;
   const F=[
-   ['g','Confirmed',`Datasheet-only prediction: ${within5} of 4 radial amplitudes within 5%`,`With B<sub>r</sub> = 1.32 T and the K&amp;J D48DIA size, nothing fitted, the finite-cylinder model predicts the radial amplitude to ${DIST.map(d=>sgn(er(d))).join(', ')} at 12, 20, 30 and 37 mm. An earlier attempt with an assumed 9 × 20 mm magnet needed a strength of only 0.40 T, which was a sign that the size was wrong. The measured size and the datasheet remove that discrepancy. The waveform is a clean sinusoid (B<sub>z</sub> harmonic distortion ${DATA[12].thd_z}% at 12 mm), and B<sub>x</sub> stays below ${Math.max(...DIST.map(d=>DATA[d].bx[0])).toFixed(2)} mT, so the sensor sat in the magnet's midplane.`],
+   ['g','Confirmed',`Datasheet-only prediction: ${within5} of 4 radial amplitudes within 5%`,`With B<sub>r</sub> = 1.32 T and the K&amp;J D48DIA size, nothing fitted, the finite-cylinder model predicts the radial amplitude to ${DIST.map(d=>sgn(er(d))).join(', ')} at 12, 20, 30 and 37 mm. The waveform is a clean sinusoid (B<sub>z</sub> harmonic distortion ${DATA[12].thd_z}% at 12 mm), and B<sub>x</sub> stays below ${Math.max(...DIST.map(d=>DATA[d].bx[0])).toFixed(2)} mT, so the sensor sat in the magnet's midplane.`],
    ['g','Physics',`Finite size matters up close, and the data sit between the two models`,`Integrating over the real cylinder instead of using a point dipole of the same moment changes the radial field by ${fd(12).toFixed(0)}%, ${fd(20).toFixed(0)}%, ${fd(30).toFixed(0)}% and ${fd(37).toFixed(0)}% at 12, 20, 30 and 37 mm, shrinking as (size/distance)². At 12 mm the measurement lies between the two (finite ${sgn(er(12))}, dipole ${sgn(ed(12))}), so a placement uncertainty of about 0.7 mm hides which one is right. By 37 mm, a point dipole is within 2% of the cylinder.`],
    ['w','Open',`12 mm reads ${Math.abs(er(12)).toFixed(0)}% above the prediction`,`The measured field at 12 mm is ${DATA[12].major[0].toFixed(1)} mT against ${fin[12].toFixed(1)} mT predicted. Reaching it needs the sensor about 0.7 mm closer than recorded. Because the field falls as r<sup>−3</sup>, 12 mm is the point most sensitive to placement, and it is the only point whose error has the opposite sign to the others. See section 4 for the placement and repeat-measurement argument.`],
    ['w','Open',`Sideways field: κ falls faster than the model`,`The measured ratio B<sub>t</sub>/B<sub>r</sub> goes ${DIST.map(d=>kap(d).toFixed(2)).join(' → ')} from 12 to 37 mm, while the finite magnet gives ${DIST.map(d=>kM[d].toFixed(2)).join(' → ')}. The tangential amplitude is therefore ${DIST.map(d=>sgn((fin[d]*kM[d]-DATA[d].minor[0])/DATA[d].minor[0]*100)).join(', ')} off. Steel parts near the magnet, differences between the sensor's axes, and the 0.13 mT resolution at 37 mm are the candidates, with a test for each in section 4.`],
@@ -896,7 +985,7 @@ $('in-J').addEventListener('input',e=>{S.J=+e.target.value;update();});
 $('in-delta').addEventListener('input',e=>{S.delta=+e.target.value;$('dval').textContent=S.delta.toFixed(2).replace(/0$/,'');update();});
 $('in-align').addEventListener('change',e=>{S.align=e.target.checked;update();});
 ['in-D','in-L'].forEach(id=>$(id).addEventListener('input',e=>{const v=+e.target.value;if(v>0){S[id==='in-D'?'D':'L']=v;cache.clear();update();}}));
-['c-r','c-tgt','c-a','c-j','c-n','p-rb','p-pitch','p-mass','p-tube','in-fs'].forEach(id=>$(id).addEventListener('input',()=>{drawCalc(S.Jcur);drawPhysics(S.Jcur);}));
+['c-r','c-tgt','c-a','c-j','c-n','p-rb','p-pitch','p-mass','p-tube','in-fs'].forEach(id=>$(id).addEventListener('input',()=>{drawCalc(S.Jcur);drawPhysics(S.Jcur);drawFlow(S.Jcur);AN.dirty=true;}));
 const tabs=$('tabs-d');DIST.forEach(d=>{const b=document.createElement('button');b.type='button';b.textContent=d+' mm';b.dataset.d=d;b.setAttribute('aria-pressed',d===S.sel);b.addEventListener('click',()=>setSel(d));tabs.appendChild(b);});
 const per=DIST.map(d=>DATA[d].period[0]);const pm=per.reduce((a,b)=>a+b)/per.length;$('per-txt').textContent=pm.toFixed(2)+' (range '+Math.min(...per).toFixed(2)+'–'+Math.max(...per).toFixed(2)+')';
 $('in-fs').addEventListener('input',e=>{const fs=+e.target.value;$('rpm-out').textContent=fs>0?(60*fs/pm).toFixed(0)+' RPM ('+(fs/pm).toFixed(2)+' Hz)':'enter a rate';});
