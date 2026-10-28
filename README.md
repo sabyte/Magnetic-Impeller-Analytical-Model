@@ -43,10 +43,3 @@ Nine runs at 12, 20 and 30 mm and 8, 10 and 12 V (34.2, 43.3 and 53.77 Hz), with
 - `analysis/field_model.py`: finite-cylinder field by numerical integration (needs numpy).
 - `analysis/predict.py`: reproduces the table above. Run `python3 predict.py` inside `analysis/`.
 
-## Publish on GitHub Pages
-
-1. Create a repository and upload the contents of this folder to the top level (not the folder itself).
-2. Settings → Pages → Deploy from a branch → `main` → `/ (root)` → Save.
-3. The site appears at `https://YOUR-USERNAME.github.io/REPOSITORY-NAME/`.
-
-GitHub Pages sites are public, even when the repository is private.
