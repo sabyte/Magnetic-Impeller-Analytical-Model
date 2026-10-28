@@ -25,11 +25,10 @@ Three of four radial predictions are within 5%. The page discusses the remaining
 - Distances are center-to-center, measured from the magnet's axis to the sensor, with the shaft parallel to the sensor's X axis.
 - Quasi-static field (no eddy currents), no steel or other magnetic material near the magnet, uniform magnetization.
 - Section 6 of the page (pump physics) uses example impeller dimensions. Replace them with the real ones.
-- The first 20 mm attempt was misaligned and is shown only as a grey marker. It is not in `data/`.
 
 ## Files
 
-- `index.html`: the interactive page. One file, no build step. It loads the fonts from Google Fonts and works without them.
+- `index.html`: the interactive page, including the animated Figure 1 (side view, end view and live field trace, all computed from the model). One file, no build step. It loads the fonts from Google Fonts and works without them.
 - `data/measured_summary.csv`: per-distance results (mean of per-revolution ellipse fits).
 - `analysis/field_model.py`: finite-cylinder field by numerical integration (needs numpy).
 - `analysis/predict.py`: reproduces the table above. Run `python3 predict.py` inside `analysis/`.
