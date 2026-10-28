@@ -1,0 +1,681 @@
+<title>N20 Diametric Magnet Field Model</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: paper-style article; sticky parameter rail on the left, numbered figures on the right; stacks on phones. */
+:root{
+  --bg:#f6f7f8; --panel:#ffffff; --ink:#14181d; --ink-2:#4a5360; --muted:#6b7480; --rule:#d9dde2; --grid:#e8ebee;
+  --accent:#0d6a73; --accent-soft:#e1f0f1;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --band1:rgba(42,120,214,.13); --band2:rgba(235,104,52,.13);
+  --good:#1f7a3a; --warn:#a86400; --bad:#b3261e;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111417; --panel:#181c20; --ink:#eef1f4; --ink-2:#b8c0c9; --muted:#8c95a0; --rule:#2b3138; --grid:#232a31;
+  --accent:#4fb8c2; --accent-soft:#16343a;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --band1:rgba(57,135,229,.18); --band2:rgba(217,89,38,.18);
+  --good:#5cc27a; --warn:#e0a040; --bad:#ef6b62; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111417; --panel:#181c20; --ink:#eef1f4; --ink-2:#b8c0c9; --muted:#8c95a0; --rule:#2b3138; --grid:#232a31;
+  --accent:#4fb8c2; --accent-soft:#16343a;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --band1:rgba(57,135,229,.18); --band2:rgba(217,89,38,.18);
+  --good:#5cc27a; --warn:#e0a040; --bad:#ef6b62; color-scheme:dark}
+*{box-sizing:border-box}
+body{position:relative;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+header.top{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:28px;align-items:center;border-bottom:1px solid var(--rule);padding-bottom:22px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1.08;margin:6px 0 10px;text-wrap:balance;letter-spacing:-.01em}
+h2{font-family:var(--f-display);font-weight:600;font-size:22px;margin:0 0 6px;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;font-size:16px;margin:0 0 6px;letter-spacing:.01em}
+p{margin:0 0 10px;max-width:70ch}
+.lede{color:var(--ink-2);font-size:16px;max-width:68ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font-family:var(--f-mono);font-size:12.5px;border:1px solid var(--rule);background:var(--panel);border-radius:999px;padding:4px 11px;white-space:nowrap}
+.chip b{font-weight:500}
+.chip.good{border-color:color-mix(in srgb,var(--good) 45%,var(--rule));color:var(--good)}
+.chip.warn{border-color:color-mix(in srgb,var(--warn) 45%,var(--rule));color:var(--warn)}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:28px;margin-top:26px;align-items:start}
+aside.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px 16px 12px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 24px);overflow:auto}
+.rail .grp{display:flex;flex-direction:column;gap:6px}
+.lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:7px;overflow:hidden}
+.seg button{flex:1 1 auto;font:500 13px var(--f-body);background:transparent;color:var(--ink-2);border:0;border-right:1px solid var(--rule);padding:6px 8px;cursor:pointer;min-width:40px}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--panel)}
+.seg button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.num{display:flex;flex-direction:column;gap:3px}
+.num span{font-size:12px;color:var(--ink-2)}
+input[type=number]{width:100%;font:14px var(--f-mono);padding:5px 7px;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--ink-2)}
+.check input{margin-top:3px;accent-color:var(--accent)}
+.readout{border-top:1px solid var(--rule);padding-top:10px;display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-family:var(--f-mono);font-size:12.5px}
+.readout dt{color:var(--muted)} .readout dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.hint{font-size:12px;color:var(--muted);line-height:1.4}
+main{display:flex;flex-direction:column;gap:30px;min-width:0}
+section.blk{display:flex;flex-direction:column;gap:12px;min-width:0}
+.fig{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 14px 10px;min-width:0}
+.fig .chart{width:100%;position:relative}
+.cap{font-size:13.5px;color:var(--ink-2);margin-top:8px;max-width:none}
+.cap b{color:var(--ink);font-family:var(--f-display);font-weight:600}
+.grid2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--ink-2);margin-bottom:6px}
+.legend i{display:inline-block;vertical-align:middle;margin-right:6px}
+.sw-line{width:18px;height:0;border-top:2px solid}
+.sw-dash{width:18px;height:0;border-top:2px dashed}
+.sw-dot{width:9px;height:9px;border-radius:50%;border:2px solid}
+.sw-band{width:18px;height:10px;border-radius:2px}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:color-mix(in srgb,var(--bg) 60%,var(--panel))}
+td:first-child,th:first-child{text-align:left}
+td.mono{font-family:var(--f-mono);font-size:12.5px}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;font:500 11px var(--f-mono);padding:2px 7px;border-radius:999px;border:1px solid var(--rule);color:var(--ink-2)}
+.pill.cal{border-color:var(--accent);color:var(--accent)}
+.err{font-family:var(--f-mono);font-size:12.5px}
+.err.g{color:var(--good)} .err.w{color:var(--warn)} .err.b{color:var(--bad)}
+.eq{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;overflow-x:auto}
+.eqrow{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center}
+.eqn{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+math{font-size:17px}
+.eqrow p{font-size:13px;color:var(--ink-2);margin:2px 0 0}
+.schem{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:8px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tabs .lbl{margin-right:4px}
+.tabs button{font:500 13px var(--f-mono);border:1px solid var(--rule);background:var(--panel);color:var(--ink-2);padding:4px 11px;border-radius:999px;cursor:pointer}
+.tabs button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.findings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.finding{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;min-width:0}
+.finding .tag{font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;display:flex;gap:6px;align-items:center}
+.finding .tag.g{color:var(--good)} .finding .tag.w{color:var(--warn)} .finding .tag.b{color:var(--bad)}
+.finding p{font-size:14px;margin:0 0 6px}
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px}
+.calc .inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start}
+.out{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px;align-content:start}
+.out dt{color:var(--ink-2)} .out dd{margin:0;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.out dd.big{font-size:18px;color:var(--accent)}
+.methods{font-size:14px;color:var(--ink-2)}
+.methods li{margin-bottom:6px;max-width:80ch}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font:12px/1.4 var(--f-mono);padding:6px 8px;border-radius:6px;white-space:nowrap;transform:translate(-50%,calc(-100% - 10px));z-index:5}
+.tip[hidden]{display:none!important}
+svg text{font-family:var(--f-body)}
+svg .tick{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+svg .axl{font-size:12px;fill:var(--ink-2)}
+svg .dl{font-size:12px;font-weight:600}
+code{font-family:var(--f-mono);font-size:.92em;background:var(--accent-soft);padding:0 4px;border-radius:4px}
+.links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.link{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.link .hd{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.link .no{font:600 22px var(--f-display);color:var(--accent);line-height:1}
+.link h3{margin:0}
+.link p{font-size:14px;margin:0}
+.link .eqline{font-family:var(--f-mono);font-size:13px;background:color-mix(in srgb,var(--bg) 70%,var(--panel));border:1px solid var(--grid);border-radius:6px;padding:6px 9px;overflow-x:auto;white-space:normal;color:var(--ink)}
+.link .vals{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:13px;margin:0}
+.link .vals dt{color:var(--ink-2)} .link .vals dd{margin:0;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.src{font:500 10.5px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid var(--rule);color:var(--muted);margin-left:auto}
+.src.m{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--rule))}
+.src.v{color:var(--accent);border-color:var(--accent)}
+@media (max-width:760px){.links{grid-template-columns:1fr}}
+.steps{counter-reset:st;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.steps li{counter-increment:st;display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px}
+.steps li::before{content:counter(st);font:600 14px var(--f-mono);color:var(--accent);border:1.5px solid var(--accent);border-radius:50%;width:26px;height:26px;display:grid;place-items:center;margin-top:1px}
+.steps h3{margin:0 0 2px}.steps p{font-size:14px;margin:0 0 4px;max-width:none;color:var(--ink-2)}
+.steps .eqline{font-family:var(--f-mono);font-size:13px;background:color-mix(in srgb,var(--bg) 70%,var(--panel));border:1px solid var(--grid);border-radius:6px;padding:6px 9px;margin:4px 0;overflow-x:auto;color:var(--ink)}
+.cause .test{font-size:13px;color:var(--muted);border-top:1px solid var(--grid);padding-top:6px;margin-top:4px}
+.cause .test b{font-family:var(--f-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+@media (max-width:980px){.layout{grid-template-columns:1fr}aside.rail{position:static;max-height:none}.grid2,.calc{grid-template-columns:1fr}}
+@media (max-width:640px){header.top{grid-template-columns:1fr}.findings{grid-template-columns:1fr}.calc .inputs{grid-template-columns:1fr 1fr}math{font-size:15px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div>
+    <div class="eyebrow">Analytical model · TLE493D-W2B6 measurements · 26 Oct 2026</div>
+    <h1>Rotating field of an N20-driven diametric magnet</h1>
+    <p class="lede">An analytical model of the rotating field around the Ø6.35 × 12.70 mm diametric NdFeB magnet (K&amp;J D48DIA, N42, Br = 1.32 T) on your N20 motor, tested against a TLE493D Hall sensor. The strength comes from the manufacturer datasheet, so nothing is fitted to the measurements. Measured: 12, 20, 30 and 37 mm at 12 V, about 570 revolutions each. The 20 mm point is the retaken run, and the first, misaligned attempt is kept as a grey marker.</p>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="schem" aria-label="Schematic end view of magnet and sensor">
+    <svg viewBox="0 0 260 230" width="100%" role="img" aria-label="End view: magnet above sensor, separated by distance d">
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+      <g transform="translate(130,62)">
+        <path d="M-40 0A40 40 0 0 1 40 0Z" fill="var(--bad)" opacity=".85" transform="rotate(-30)"/>
+        <path d="M-40 0A40 40 0 0 0 40 0Z" fill="var(--s1)" opacity=".85" transform="rotate(-30)"/>
+        <circle r="40" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+        <text x="-14" y="-12" font-size="14" font-weight="700" fill="#fff" transform="rotate(-30)">N</text>
+        <text x="4" y="24" font-size="14" font-weight="700" fill="#fff" transform="rotate(-30)">S</text>
+        <circle r="3" fill="var(--ink)"/>
+        <path d="M52 -26A58 58 0 0 1 52 26" fill="none" stroke="var(--ink-2)" stroke-width="1.5" marker-end="url(#ah)" style="color:var(--ink-2)"/>
+        <text x="62" y="4" font-size="12" fill="var(--ink-2)">θ = ωt</text>
+      </g>
+      <line x1="130" y1="62" x2="130" y2="178" stroke="var(--muted)" stroke-dasharray="3 3"/>
+      <line x1="96" y1="62" x2="96" y2="178" stroke="var(--ink-2)" marker-start="url(#ah)" marker-end="url(#ah)" style="color:var(--ink-2)"/>
+      <text x="88" y="124" font-size="13" fill="var(--ink)" text-anchor="end" font-style="italic">d</text>
+      <rect x="112" y="178" width="36" height="12" rx="2" fill="var(--ink)"/>
+      <text x="130" y="210" font-size="11" fill="var(--muted)" text-anchor="middle" font-family="var(--f-mono)">TLE493D</text>
+      <line x1="130" y1="184" x2="130" y2="150" stroke="var(--s1)" stroke-width="2.2" marker-end="url(#ah)" style="color:var(--s1)"/>
+      <text x="136" y="160" font-size="12" fill="var(--s1)">B<tspan font-size="9" dy="3">r</tspan><tspan dy="-3"> (z)</tspan></text>
+      <line x1="130" y1="184" x2="168" y2="184" stroke="var(--s2)" stroke-width="2.2" marker-end="url(#ah)" style="color:var(--s2)"/>
+      <text x="172" y="188" font-size="12" fill="var(--s2)">B<tspan font-size="9" dy="3">t</tspan><tspan dy="-3"> (y)</tspan></text>
+      <text x="130" y="14" font-size="11" fill="var(--muted)" text-anchor="middle" font-family="var(--f-mono)">END VIEW · SHAFT AXIS ⟂ PAGE</text>
+    </svg>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="rail" aria-label="Model parameters">
+  <div class="grp"><div class="lbl">Model</div>
+    <div class="seg" id="seg-model"><button data-v="dipole" aria-pressed="false">Point dipole</button><button data-v="finite" aria-pressed="true">Finite cylinder</button></div>
+  </div>
+  <div class="grp"><div class="lbl">Magnet geometry (mm)</div>
+    <div class="row2"><label class="num"><span>Diameter D</span><input type="number" id="in-D" value="6.35" min="1" max="50" step="0.05"></label>
+    <label class="num"><span>Length L</span><input type="number" id="in-L" value="12.7" min="1" max="80" step="0.05"></label></div>
+    <div class="hint">Default is the K&J D48DIA size. The dipole model treats the same volume as a point.</div>
+  </div>
+  <div class="grp"><div class="lbl">Distance d is measured from</div>
+    <div class="seg" id="seg-ref"><button data-v="axis" aria-pressed="true">Magnet axis</button><button data-v="surface" aria-pressed="false">Magnet surface</button></div>
+  </div>
+  <div class="grp"><div class="lbl">Magnet strength J from</div>
+    <div class="seg" id="seg-cal"><button data-v="datasheet" aria-pressed="true">Datasheet</button><button data-v="12" aria-pressed="false">12</button><button data-v="20" aria-pressed="false">20</button><button data-v="30" aria-pressed="false">30</button><button data-v="37" aria-pressed="false">37</button><button data-v="all" aria-pressed="false">All</button><button data-v="manual" aria-pressed="false">Set</button></div>
+    <label class="num"><span>Datasheet remanence Br (T)</span><input type="number" id="in-Br" value="1.32" min="0.5" max="1.6" step="0.01"></label>
+    <label class="num" id="manual-wrap"><span>Polarization J (T): <b id="jval" style="font-family:var(--f-mono)">1.32</b></span><input type="range" id="in-J" min="0.05" max="1.5" step="0.005" value="1.32" disabled></label>
+  </div>
+  <div class="grp"><div class="lbl">Placement uncertainty band</div>
+    <label class="num"><span>±δ = <b id="dval" style="font-family:var(--f-mono)">1.0</b> mm</span><input type="range" id="in-delta" min="0" max="3" step="0.25" value="1"></label>
+  </div>
+  <label class="check"><input type="checkbox" id="in-align"><span>Treat each run's measured ellipse tilt ψ as a sideways sensor offset (r = d / cos ψ)</span></label>
+  <dl class="readout" id="readout"></dl>
+</aside>
+
+<main>
+  <section class="blk" id="model">
+    <div class="eyebrow">1 · Model</div>
+    <h2>A known magnet: N42, 1.32 T, Ø6.35 × 12.70 mm</h2>
+    <p>The model is derived in six steps. Each one is a standard result from magnetostatics, and the numbers in the equations update with the magnet on this page.</p>
+    <div class="fig"><ol class="steps">
+      <li><div><h3>A magnet is frozen magnetization</h3><p>NdFeB holds a nearly uniform magnetization <b>M</b> = B<sub>r</sub>/μ₀, which is <span id="m-M">1.05</span> MA/m for B<sub>r</sub> = 1.32 T. In a diametric magnet it points across the 6.35 mm width, not along the length. Outside the magnet there is no electric current, so only the divergence of <b>M</b> creates field. It is equivalent to a "magnetic surface charge" σ = <b>M</b>·n̂ on the curved side, positive on the north half and negative on the south half. The flat ends carry none, because <b>M</b> is parallel to them.</p></div></li>
+      <li><div><h3>Far away it acts as one dipole</h3><p>Summing all the surface charge gives a net dipole moment equal to magnetization times volume.</p><div class="eqline">m = M · V = (B_r / μ₀) · π R² L  =  <span id="m-m">0.42</span> A·m²   (R = 3.175 mm, L = 12.70 mm)</div></div></li>
+      <li><div><h3>The dipole field has a fixed shape</h3><p>Directly below the magnet's midpoint, the direction to the sensor r̂ is perpendicular to the shaft. The dipole field is B = μ₀/(4πr³) · [3(m·r̂)r̂ − m]. Split into the part along r̂ (the chip's Z) and the part across it (the chip's Y), the factor 3 appears only in the radial part, so the radial part is twice the tangential part.</p><div class="eqline">B_r = μ₀ m cosθ / (2π r³)      B_t = μ₀ m sinθ / (4π r³)      B_x = 0</div></div></li>
+      <li><div><h3>Spinning the magnet draws an ellipse</h3><p>With the shaft angle θ = ωt, B<sub>r</sub> and B<sub>t</sub> are sinusoids 90° apart. Together they trace an ellipse with semi-axes B<sub>r</sub> and B<sub>t</sub> in the ratio 2 : 1 (κ = ½). The amplitude does not depend on speed, because at 54 Hz the field changes slowly enough to treat as static (Section 6, link 1). The ellipse sizes are therefore what the sensor measures.</p></div></li>
+      <li><div><h3>Finite size changes the numbers slightly</h3><p>Step 2 treats the magnet as a point. A real 12.7 mm-long magnet sampled at 12 mm is not small compared with the distance, so the page also integrates the surface charge over the actual cylinder (Eq. 2). The correction scales like (size/distance)². It is −19% at 12 mm, shrinking to about −2% at 37 mm (see the findings below).</p></div></li>
+      <li><div><h3>The sensor measures the field in digital counts</h3><p>The TLE493D uses Hall elements: a current through a thin plate gives a transverse voltage proportional to the field component normal to the plate. It has one set of elements per axis, a 12-bit conversion and a resolution of 0.13 mT per count (this is the ratio between your mT and LSB columns). At 37 mm the tangential amplitude is only about 5 counts, which matters for the discussion in Section 4.</p></div></li>
+    </ol></div>
+    <div class="eq">
+      <div class="eqrow"><span class="eqn">(1)</span><div>
+        <math display="block"><mrow><msub><mi>B</mi><mi>r</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>μ</mi><mn>0</mn></msub><mi>m</mi></mrow><mrow><mn>2</mn><mi>π</mi><msup><mi>r</mi><mn>3</mn></msup></mrow></mfrac><mi>cos</mi><mi>θ</mi><mo>,</mo><mspace width="1em"/><msub><mi>B</mi><mi>t</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>μ</mi><mn>0</mn></msub><mi>m</mi></mrow><mrow><mn>4</mn><mi>π</mi><msup><mi>r</mi><mn>3</mn></msup></mrow></mfrac><mi>sin</mi><mi>θ</mi><mo>,</mo><mspace width="1em"/><mi>m</mi><mo>=</mo><mfrac><mrow><mi>J</mi><mi>V</mi></mrow><msub><mi>μ</mi><mn>0</mn></msub></mfrac></mrow></math>
+        <p>Point dipole, closed form. The axial ratio κ = B<sub>t</sub>/B<sub>r</sub> is exactly ½ and both amplitudes fall as r⁻³.</p></div></div>
+      <div class="eqrow"><span class="eqn">(2)</span><div>
+        <math display="block"><mrow><mi mathvariant="bold">B</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>)</mo><mo>=</mo><mfrac><mi>J</mi><mrow><mn>4</mn><mi>π</mi></mrow></mfrac><msubsup><mo>∫</mo><mrow><mo>−</mo><mi>L</mi><mo>/</mo><mn>2</mn></mrow><mrow><mi>L</mi><mo>/</mo><mn>2</mn></mrow></msubsup><msubsup><mo>∫</mo><mn>0</mn><mrow><mn>2</mn><mi>π</mi></mrow></msubsup><mi>cos</mi><mo>(</mo><mi>φ</mi><mo>′</mo><mo>−</mo><mi>θ</mi><mo>)</mo><mfrac><mrow><mi mathvariant="bold">r</mi><mo>−</mo><mi mathvariant="bold">r</mi><mo>′</mo></mrow><msup><mrow><mo>|</mo><mi mathvariant="bold">r</mi><mo>−</mo><mi mathvariant="bold">r</mi><mo>′</mo><mo>|</mo></mrow><mn>3</mn></msup></mfrac><mi>R</mi><mspace width="0.2em"/><mi>d</mi><mi>φ</mi><mo>′</mo><mi>d</mi><mi>x</mi><mo>′</mo></mrow></math>
+        <p>Finite cylinder (radius R, length L), by the equivalent surface-charge method: a transverse magnetization J leaves charge J cos(φ′ − θ) on the curved face and none on the end caps. Evaluated with 64 × 32-point quadrature. It reduces to Eq. 1 when r ≫ L. Checked against a brute-force volume-dipole sum to within 0.02%.</p></div></div>
+      <div class="eqrow"><span class="eqn">(3)</span><div>
+        <math display="block"><mrow><msub><mi>J</mi><mi>eff</mi></msub><mo>=</mo><mfrac><mrow><msubsup><mi>B</mi><mi>r</mi><mi>meas</mi></msubsup><mo>(</mo><msub><mi>d</mi><mi>c</mi></msub><mo>)</mo></mrow><mrow><msub><mover><mi>b</mi><mo>^</mo></mover><mi>r</mi></msub><mo>(</mo><msub><mi>d</mi><mi>c</mi></msub><mo>)</mo></mrow></mfrac></mrow></math>
+        <p>Optional calibration. b̂<sub>r</sub> is the model's radial amplitude per tesla of J. The page does not need this by default: J is the datasheet Br, so every value in Figure 1 is a prediction. Choose a distance under "Magnet strength J from" to fit J to that one measurement instead.</p></div></div>
+    </div>
+  </section>
+
+  <section class="blk" id="validation">
+    <div class="eyebrow">2 · Validation</div>
+    <h2>Prediction against measurement</h2>
+    <div class="fig">
+      <div class="legend" id="leg1"></div>
+      <div class="chart" id="ch-amp"></div>
+      <p class="cap"><b>Figure 1 | Field amplitude versus distance.</b> Lines are the model prediction from the datasheet strength, and the shaded band is the model over d ± δ. Markers are measured semi-axes of the field ellipse: radial B<sub>r</sub> (major) and tangential B<sub>t</sub> (minor). These are fitted per revolution and shown as mean ± SD over N ≈ 570 revolutions. The SD (≈0.03 mT) is smaller than the markers, so placement of the sensor, not noise, limits agreement. If you pick a distance for calibration in the side panel, its radial point is ringed. Log–log axes, so a straight line of slope −3 is a dipole.</p>
+    </div>
+    <div class="tablewrap"><table id="tbl"><thead><tr><th>Distance</th><th>Role</th><th>B<sub>r</sub> measured (mT)</th><th>B<sub>r</sub> model</th><th>Error</th><th>B<sub>t</sub> measured (mT)</th><th>B<sub>t</sub> model</th><th>Error</th><th>κ meas / model</th></tr></thead><tbody></tbody></table></div>
+
+    <div class="tabs" id="tabs-d"><span class="lbl">Distance for Figures 2–3</span></div>
+    <div class="grid2">
+      <div class="fig">
+        <div class="legend" id="leg2"></div>
+        <div class="chart" id="ch-wave"></div>
+        <p class="cap"><b>Figure 2 | One revolution, measured and predicted.</b> Samples are folded onto shaft angle and averaged in 48 bins (±1 SD bars). Lines come from the model. Only the angle origin and rotation sense are taken from the data, not the amplitudes.</p>
+      </div>
+      <div class="fig">
+        <div class="legend" id="leg3"></div>
+        <div class="chart" id="ch-ell"></div>
+        <p class="cap"><b>Figure 3 | Field-vector ellipse.</b> B<sub>y</sub> against B<sub>z</sub> at the chip, equal axes. The dashed ellipse is the model's prediction, and the dots are the measured phase-binned field.</p>
+      </div>
+    </div>
+    <div class="fig">
+      <div class="legend" id="leg4"></div>
+      <div class="chart" id="ch-ratio"></div>
+      <p class="cap"><b>Figure 4 | Ellipse axial ratio κ = B<sub>t</sub>/B<sub>r</sub>.</b> This ratio is independent of J and of calibration. It depends only on geometry. The dipole gives exactly 0.5. A finite cylinder of the set length rises above 0.5 at close range.</p>
+    </div>
+  </section>
+
+  <section class="blk" id="findings">
+    <div class="eyebrow">3 · What the comparison establishes</div>
+    <h2>Findings</h2>
+    <div class="findings" id="find"></div>
+  </section>
+
+  <section class="blk" id="notes">
+    <div class="eyebrow">4 · Why predictions and measurements differ</div>
+    <h2>Reading the discrepancies</h2>
+    <p>The radial field agrees within 5% at three of four distances, and the sideways field is off by 11–23% at three. This section takes each gap in turn and ranks the likely reasons, with a test for each. The table shows the change in distance that would remove each error (a negative shift means the sensor would have been closer), and the local slope n of the field law B ∝ r<sup>−n</sup>. It follows the settings in the side panel.</p>
+    <div class="tablewrap"><table id="tbl-notes"><thead><tr><th>Distance</th><th>B<sub>r</sub> error</th><th>Shift to fit B<sub>r</sub></th><th>Slope n</th><th>B<sub>t</sub> error</th><th>Shift to fit B<sub>t</sub></th><th>κ meas / model</th></tr></thead><tbody></tbody></table></div>
+    <div class="findings">
+      <div class="finding cause"><div class="tag w">Explains 12 mm</div><h3>Each run was placed by hand, to about ±0.5 mm</h3><p>Because the field falls as r<sup>−3</sup>, a placement error of 1% in distance becomes a 3% error in field. At 12 mm, 0.5 mm is already a 12% change. The table shows that the radial errors correspond to shifts of about −0.7 mm at 12 mm and +0.1 to +0.4 mm at the others. Those are each within what a ruler gives, and each run was set up separately. At 12 mm the radial and tangential components point to nearly the same shift (about −0.7 and −0.6 mm), which is what a placement error produces. This is the simplest explanation, but it is a consistency argument, not a proof.</p><p class="test"><b>Test</b> Repeat 12 mm three times, repositioning each time. If the spread is about ±10%, placement dominates.</p></div>
+      <div class="finding cause"><div class="tag w">Explains the far points</div><h3>Magnet tolerances add up to about ±5%</h3><p>The field is proportional to B<sub>r</sub>·D²·L. K&amp;J quote ±0.1 mm on the dimensions, which is ±4% in volume for a 6.35 mm diameter. NdFeB remanence also varies by a few percent between batches, and the magnetization direction is only guaranteed to a few degrees. Together these can account for the +1.4% to +4.8% radial errors at 20, 30 and 37 mm.</p><p class="test"><b>Test</b> Measure the diameter and length with calipers (you have already done the length) and use them in the left panel.</p></div>
+      <div class="finding cause"><div class="tag w">Explains the sideways field</div><h3>The measured κ falls faster than the model</h3><p>The model's tangential-to-radial ratio drops from <span id="k-mod12"></span> to <span id="k-mod37"></span> over 12 to 37 mm, but the measured ratio drops from <span id="k-me12"></span> to <span id="k-me37"></span>. A constant gain difference between the Y and Z channels would shift all four points by the same factor, so it cannot produce this trend on its own. The table shows the same thing: at 12 mm both components need the same distance shift, while at 30 and 37 mm the tangential component would need a shift several times larger than the radial one. The candidates are: (a) ferromagnetic parts next to the magnet, such as the motor's steel shaft, the gearbox and its screws, which extend and distort the transverse field; (b) the Y and Z Hall elements not sitting at exactly the same point inside the chip, which a 0.3 mm difference would change by 2–3% at 12 mm; (c) resolution: at 37 mm the tangential amplitude is only about 5 counts, so one count (0.13 mT) of systematic error is a 20% change.</p><p class="test"><b>Test</b> Rotate the chip by 90° about its normal and repeat one distance. If the error follows the chip, it is the sensor. If it stays with the setup, it is the steel. Replacing the steel shaft with a non-magnetic one would also separate the two.</p></div>
+      <div class="finding cause"><div class="tag g">Ruled out by the data</div><h3>Not the chip roll, axial offset, speed, temperature or noise</h3><p><b>Chip roll about the radial axis</b> would move tangential field into B<sub>x</sub>. B<sub>x</sub> is below 0.3 mT everywhere, which limits the roll to about 12° or less and the loss of tangential field to under 2.5%, much less than the 11–23% gaps. <b>Axial offset</b> of the sensor along the shaft would create a B<sub>x</sub> of about 3.4 mT per millimetre at 12 mm (model), but the measured B<sub>x</sub> is 0.13 mT, so the sensor was centred within about 0.05 mm. <b>Speed and heating:</b> the amplitude is flat to 0.2% across each record, the chip stayed within 21–23 °C, and the NdFeB temperature coefficient (about −0.1% per K) is negligible over that range. <b>Noise:</b> the ±0.03 mT scatter per revolution averages down over about 570 revolutions.</p></div>
+    </div>
+  </section>
+
+  <section class="blk" id="design">
+    <div class="eyebrow">5 · Using the validated model</div>
+    <h2>Field and torque at the impeller</h2>
+    <p>With J fixed by calibration, the model gives the field anywhere in the midplane. This includes the impeller's magnets inside the tube. Torque on a magnet of moment m<sub>i</sub> is τ = m<sub>i</sub> × B. Because the driving field is an ellipse, the largest torque available swings between m<sub>i</sub>B<sub>t</sub> and m<sub>i</sub>B<sub>r</sub> each turn. The lower value is the conservative bound for staying synchronised.</p>
+    <div class="fig calc">
+      <div class="inputs">
+        <label class="num"><span>Impeller distance from magnet axis (mm)</span><input type="number" id="c-r" value="20" min="5" max="200" step="0.5"></label>
+        <label class="num"><span>Target minimum field (mT)</span><input type="number" id="c-tgt" value="5" min="0.05" max="200" step="0.5"></label>
+        <label class="num"><span>Cube edge a (mm), example</span><input type="number" id="c-a" value="3" min="0.5" max="20" step="0.5"></label>
+        <label class="num"><span>Cube polarization (T), example</span><input type="number" id="c-j" value="1.3" min="0.1" max="1.5" step="0.05"></label>
+        <label class="num"><span>Number of cubes</span><input type="number" id="c-n" value="2" min="1" max="10" step="1"></label>
+        <p class="hint" style="grid-column:1/-1">The cube size and grade are placeholder examples (two 3 mm N42 cubes). Enter your own. The calculation assumes the cubes' moments add and sit in the magnet's midplane. It ignores fluid drag, friction and the cubes' own interaction.</p>
+      </div>
+      <dl class="out" id="c-out"></dl>
+    </div>
+  </section>
+
+  <section class="blk" id="physics">
+    <div class="eyebrow">6 · Physics of the magnetic pump</div>
+    <h2>From motor to dye: six links of physics</h2>
+    <p>In the simulator, the N20 motor spins the external magnet, the impeller inside the tube turns the opposite way, and dye moves from right to left. Each link in that chain is a physical law. Links 1 and 2 are checked directly by the sensor data. Links 3–6 combine the validated field with the impeller's magnets and geometry. Those use the example inputs below until you enter your real dimensions.</p>
+    <div class="fig">
+      <div class="calc" style="grid-template-columns:1fr">
+        <div class="inputs" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+          <label class="num"><span>Blade tip radius R<sub>b</sub> (mm), example</span><input type="number" id="p-rb" value="2.5" min="0.5" max="20" step="0.1"></label>
+          <label class="num"><span>Blade pitch p (mm), example</span><input type="number" id="p-pitch" value="10" min="1" max="100" step="0.5"></label>
+          <label class="num"><span>Rotor mass M (g), example</span><input type="number" id="p-mass" value="0.5" min="0.01" max="50" step="0.05"></label>
+          <label class="num"><span>Tube inner diameter (mm), example</span><input type="number" id="p-tube" value="6" min="1" max="50" step="0.5"></label>
+        </div>
+        <p class="hint">The impeller distance, cube size and cube grade come from section 5. Motor speed comes from the sample rate in section 7 divided by the measured samples per revolution. Fluid is water at 20 °C (ρ = 998 kg/m³, ν = 1.0 mm²/s).</p>
+      </div>
+    </div>
+    <div class="links" id="links"></div>
+    <div class="fig">
+      <div class="legend" id="leg6"></div>
+      <div class="chart" id="ch-omega"></div>
+      <p class="cap"><b>Figure 6 | The driving field turns at an uneven rate.</b> This is the rate at which the field direction at the sensor turns, relative to the magnet's rate, through one revolution. Dots come from the measured B<sub>y</sub> and B<sub>z</sub> at the distance chosen above Figure 2. The line is Eq. 5 with the model's κ. Below the magnet the field turns 1/κ ≈ 2 times faster than the magnet as the magnet passes sideways, and κ ≈ ½ as fast as it points at the sensor. That is the rhythm the impeller has to follow.</p>
+    </div>
+    <div class="fig">
+      <h3>Experiments that would test links 3–6</h3>
+      <ol class="methods" style="margin:6px 0 0;padding-left:20px">
+        <li><b>Flow against motor speed.</b> Vary the motor voltage and time the dye front over a marked length. Link 5 predicts flow rising in proportion to speed until the impeller loses lock, then collapsing.</li>
+        <li><b>Loss of lock against distance.</b> Increase the gap and find where the impeller stops following. Link 3 predicts the critical load torque falls as r⁻³, using the field model tested in section 2.</li>
+        <li><b>Reverse the motor.</b> The impeller and the flow should both reverse. The flow rate need not be equal both ways, because the blades are not symmetric.</li>
+        <li><b>Ramp the start.</b> Starting at full speed may fail where a slow ramp locks. That is the pull-in limit of link 3.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="blk" id="methods">
+    <div class="eyebrow">7 · Methods</div>
+    <h2>How the measured values were extracted</h2>
+    <div class="fig">
+      <div class="legend" id="leg5"></div>
+      <div class="chart" id="ch-raw"></div>
+      <p class="cap"><b>Figure 5 | Raw sensor stream, first 92 samples at 12 mm.</b> The logger stores sample index only, with no timestamps. Each revolution spans about 18.3 samples.</p>
+    </div>
+    <ol class="methods">
+      <li>Each CSV (Infineon 3D-sensor GUI, master-controlled mode, 0.13 mT/LSB) was split into revolutions at the upward zero crossings of B<sub>z</sub>, with linear interpolation between samples.</li>
+      <li>Within each revolution, B<sub>x</sub>, B<sub>y</sub> and B<sub>z</sub> were least-squares fitted to an offset plus first harmonic. The two transverse phasors give the field ellipse. Its semi-axes are B<sub>r</sub> (major) and B<sub>t</sub> (minor), and its tilt is ψ. Semi-axes do not depend on how the chip is rolled about the shaft direction.</li>
+      <li>Values are the mean ± SD over all complete revolutions: N = 566, 558, 597 and 566 at 12, 20, 30 and 37 mm. Chip temperature stayed between 21.2 and 23.1 °C.</li>
+      <li>Shaft speed: period = <span id="per-txt"></span> samples per revolution. The logger GUI reports 1003 samples/s. Change it here if your recordings used a different rate: <input type="number" id="in-fs" value="1003" placeholder="Hz" min="1" max="100000" step="1" style="width:90px;display:inline-block"> → <b id="rpm-out" style="font-family:var(--f-mono)">enter a rate</b></li>
+    </ol>
+  </section>
+</main>
+</div>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+const DATA = {"12":{"n_samples":10455,"n_rev":566,"period":[18.458,0.0966],"bx":[0.1315,0.0284],"by":[25.5423,0.0546],"bz":[46.5468,0.0754],"major":[46.5531,0.0755],"minor":[25.5309,0.0551],"tilt":[1.113,0.1281],"phase_yz":[88.5815,0.1646],"off":[0.084,0.064,-0.146],"thd_z":0.4,"thd_y":0.68,"temp":[21.16,23.08],"wave":{"bx":{"mean":[0.12,0.119,0.111,0.113,0.133,0.141,0.15,0.155,0.16,0.151,0.163,0.161,0.14,0.105,0.089,0.052,0.027,-0.011,-0.041,-0.073,-0.095,-0.1,-0.124,-0.127,-0.13,-0.109,-0.104,-0.068,-0.031,0.001,0.04,0.077,0.109,0.143,0.155,0.19,0.207,0.226,0.223,0.22,0.223,0.209,0.195,0.175,0.158,0.155,0.135,0.125],"sd":[0.09,0.09,0.088,0.096,0.087,0.091,0.089,0.089,0.082,0.083,0.08,0.089,0.082,0.086,0.084,0.079,0.089,0.085,0.087,0.086,0.08,0.085,0.089,0.078,0.086,0.085,0.087,0.092,0.089,0.085,0.085,0.081,0.087,0.088,0.091,0.096,0.088,0.089,0.09,0.08,0.079,0.087,0.093,0.089,0.085,0.087,0.085,0.087]},"by":{"mean":[-25.337,-24.791,-23.82,-22.432,-20.669,-18.542,-16.078,-13.403,-10.393,-7.235,-4.055,-0.831,2.467,5.775,8.963,11.978,14.784,17.428,19.716,21.586,23.128,24.325,25.068,25.403,25.332,24.864,23.965,22.65,20.956,18.918,16.467,13.733,10.885,7.816,4.565,1.097,-2.353,-5.651,-8.868,-12.001,-14.886,-17.514,-19.81,-21.769,-23.324,-24.46,-25.158,-25.46],"sd":[0.15,0.219,0.368,0.503,0.544,0.654,0.776,0.868,0.961,0.91,0.949,1.004,0.963,0.939,0.896,0.883,0.865,0.726,0.6,0.526,0.401,0.3,0.167,0.121,0.132,0.224,0.349,0.44,0.558,0.699,0.804,0.777,0.926,0.948,0.96,1.03,0.982,0.958,0.965,0.881,0.789,0.726,0.661,0.558,0.401,0.303,0.166,0.114]},"bz":{"mean":[3.164,9.141,15.18,20.743,25.984,30.813,35.058,38.636,41.704,44.009,45.487,46.219,46.194,45.352,43.755,41.418,38.37,34.54,30.189,25.431,20.254,14.658,8.399,2.607,-3.258,-9.171,-15.102,-20.695,-25.947,-30.76,-35.166,-38.935,-41.906,-44.228,-45.863,-46.7,-46.723,-45.886,-44.317,-41.924,-38.802,-35.012,-30.659,-25.665,-20.361,-14.848,-9.101,-3.183],"sd":[1.77,1.967,1.709,1.669,1.396,1.308,1.163,1.025,0.81,0.542,0.344,0.15,0.163,0.368,0.586,0.814,1.083,1.179,1.321,1.534,1.614,1.728,2.01,1.686,1.775,1.81,1.681,1.599,1.475,1.418,1.258,0.941,0.819,0.594,0.371,0.183,0.166,0.381,0.615,0.811,0.99,1.21,1.431,1.587,1.508,1.692,1.706,1.784]}},"raw":{"bx":[0.26,0.26,0.13,0.26,0.13,0.13,0.26,0.13,0.13,0.13,0.13,0.0,-0.13,0.0,-0.13,-0.13,-0.13,0.13,0.13,0.13,0.26,0.13,0.13,0.13,0.13,0.13,0.13,0.13,0.26,0.13,-0.13,0.0,0.0,0.0,-0.13,0.13,0.0,0.13,0.13,0.26,0.26,0.26,0.13,0.13,0.13,0.26,0.26,0.13,0.0,-0.13,-0.13,-0.13,-0.13,0.0,0.13,0.13,0.39,0.13,0.26,0.13,0.13,-0.13,0.13,0.13,0.26,0.0,0.13,0.13,-0.13,-0.13,-0.26,-0.13,0.0,0.13,0.26,0.26,0.26,0.13,0.13,0.13,0.0,0.13,0.0,0.13,0.13,0.0,0.13,-0.26,-0.13,-0.13,0.0,0.0],"by":[5.06,-3.25,-11.95,-18.96,-23.51,-25.58,-24.55,-21.04,-14.81,-7.01,1.43,9.61,17.01,22.34,24.94,25.06,22.34,16.75,9.22,0.52,-8.05,-15.45,-21.17,-24.81,-25.32,-23.12,-18.31,-11.56,-3.12,5.58,13.38,19.61,24.03,25.45,24.16,20.13,14.03,5.84,-2.86,-11.17,-18.18,-23.12,-25.32,-24.94,-21.43,-15.58,-8.18,0.26,8.7,16.23,21.82,24.81,25.19,22.73,17.66,10.78,2.47,-6.1,-14.42,-20.65,-24.42,-25.32,-23.64,-19.09,-12.47,-4.55,3.77,11.69,18.83,23.25,25.06,24.42,21.3,15.19,7.53,-0.78,-8.96,-16.75,-22.34,-25.06,-25.19,-22.47,-17.14,-9.74,-1.43,6.62,14.29,20.52,24.29,25.45,23.64,19.48],"bz":[-45.45,-46.49,-41.82,-32.21,-19.22,-4.55,10.91,25.19,36.88,44.16,46.36,43.25,35.06,22.99,8.44,-7.01,-21.69,-34.42,-43.12,-46.75,-44.81,-38.05,-26.88,-12.47,3.51,18.57,31.56,40.91,45.84,45.32,39.87,30.0,17.27,1.82,-13.9,-27.92,-38.57,-45.32,-46.62,-42.6,-33.64,-21.04,-6.36,9.48,24.03,35.71,43.38,46.36,43.77,36.62,25.19,11.04,-4.42,-20.0,-32.99,-42.08,-46.49,-45.84,-39.48,-28.7,-14.94,0.13,15.45,29.35,39.61,45.32,46.1,41.56,31.82,19.09,4.68,-10.78,-25.45,-37.01,-44.42,-46.88,-44.16,-36.23,-23.9,-9.22,5.97,20.91,33.25,42.34,46.1,44.81,38.7,28.05,14.16,-1.17,-16.23,-29.61]}},"20":{"n_samples":10500,"n_rev":558,"period":[18.7754,0.1675],"bx":[0.2427,0.0284],"by":[4.7966,0.0302],"bz":[9.1899,0.059],"major":[9.3052,0.0577],"minor":[4.5689,0.03],"tilt":[-10.3748,0.2999],"phase_yz":[105.3096,0.4123],"off":[0.019,0.058,-0.189],"thd_z":3.31,"thd_y":0.48,"temp":[22.12,23.08],"wave":{"bx":{"mean":[-0.019,0.013,0.065,0.094,0.11,0.133,0.178,0.19,0.216,0.228,0.256,0.251,0.258,0.259,0.262,0.253,0.231,0.228,0.204,0.185,0.177,0.137,0.1,0.083,0.049,0.015,-0.018,-0.042,-0.08,-0.113,-0.134,-0.147,-0.17,-0.193,-0.193,-0.211,-0.209,-0.214,-0.21,-0.211,-0.199,-0.194,-0.173,-0.155,-0.137,-0.105,-0.087,-0.049],"sd":[0.081,0.094,0.087,0.09,0.085,0.084,0.084,0.082,0.087,0.083,0.09,0.091,0.086,0.073,0.087,0.081,0.086,0.09,0.088,0.093,0.093,0.099,0.086,0.082,0.084,0.084,0.085,0.083,0.084,0.092,0.095,0.088,0.09,0.083,0.085,0.089,0.085,0.088,0.098,0.09,0.083,0.088,0.087,0.081,0.087,0.09,0.081,0.084]},"by":{"mean":[-4.624,-4.718,-4.712,-4.62,-4.465,-4.237,-3.907,-3.544,-3.121,-2.578,-2.081,-1.515,-0.895,-0.282,0.374,0.975,1.598,2.195,2.707,3.232,3.645,4.04,4.375,4.59,4.771,4.836,4.849,4.764,4.604,4.371,4.059,3.668,3.203,2.753,2.183,1.605,0.977,0.342,-0.255,-0.903,-1.504,-2.065,-2.637,-3.104,-3.548,-3.926,-4.222,-4.468],"sd":[0.104,0.09,0.091,0.094,0.102,0.123,0.137,0.135,0.175,0.197,0.185,0.184,0.196,0.209,0.211,0.206,0.196,0.181,0.174,0.168,0.147,0.138,0.116,0.106,0.09,0.085,0.083,0.102,0.107,0.126,0.132,0.156,0.167,0.177,0.195,0.186,0.204,0.188,0.205,0.206,0.192,0.188,0.176,0.153,0.147,0.122,0.122,0.1]},"bz":{"mean":[0.556,1.857,3.062,4.154,4.985,5.65,6.322,6.891,7.657,8.721,9.105,9.262,9.26,9.11,8.691,7.745,6.856,6.266,5.659,4.888,4.103,2.947,1.688,0.574,-0.702,-1.912,-3.133,-4.342,-5.316,-6.317,-7.158,-7.916,-8.533,-8.944,-9.274,-9.412,-9.409,-9.229,-8.907,-8.439,-7.818,-7.101,-6.179,-5.267,-4.211,-3.031,-1.866,-0.634],"sd":[0.376,0.375,0.37,0.287,0.226,0.213,0.192,0.2,0.571,0.361,0.135,0.073,0.074,0.142,0.359,0.581,0.2,0.18,0.213,0.246,0.279,0.396,0.344,0.366,0.384,0.372,0.395,0.313,0.321,0.282,0.248,0.209,0.162,0.135,0.094,0.072,0.079,0.113,0.136,0.188,0.209,0.238,0.286,0.293,0.3,0.353,0.356,0.33]}},"raw":{"bx":[-0.13,-0.13,-0.26,-0.13,0.0,0.0,0.13,0.13,0.13,0.39,0.26,0.26,0.26,0.13,0.0,0.13,-0.13,0.0,-0.39,-0.13,-0.13,-0.13,-0.13,-0.13,0.0,0.13,0.13,0.13,0.26,0.13,0.26,0.13,0.26,0.13,0.0,0.0,-0.13,-0.13,-0.13,-0.13,-0.39,0.0,-0.13,-0.13,0.13,0.26,0.26,0.13,0.26,0.26,0.26,0.13,0.0,-0.13,0.0,-0.13,-0.13,-0.26,-0.13,-0.39,-0.13,-0.13,0.13,0.0,0.13,0.13,0.13,0.26,0.39,0.13,0.26,0.13,0.13,0.0,-0.13,-0.13,-0.13,-0.26,-0.26,-0.13,0.13,0.0,0.13,0.0,0.13,0.26,0.26,0.26,0.39,0.13,0.0,-0.13],"by":[0.91,-0.52,-2.08,-3.25,-4.29,-4.68,-4.68,-4.16,-3.12,-1.82,-0.26,1.43,2.86,4.03,4.55,4.94,4.68,3.77,2.47,1.17,-0.39,-1.95,-3.25,-4.16,-4.55,-4.68,-4.03,-3.25,-1.95,-0.39,1.04,2.6,3.77,4.68,4.81,4.68,3.9,2.86,1.43,-0.26,-1.82,-3.12,-4.03,-4.55,-4.68,-4.16,-3.25,-2.08,-0.65,1.04,2.73,3.64,4.42,4.81,4.55,3.77,2.73,1.43,-0.26,-1.82,-3.12,-4.16,-4.55,-4.81,-4.16,-3.25,-1.82,-0.39,1.04,2.6,3.77,4.68,4.81,4.68,3.77,2.73,1.17,-0.39,-1.82,-3.12,-4.03,-4.68,-4.68,-4.16,-3.51,-2.08,-0.78,0.91,2.47,3.77,4.42,4.81],"bz":[-9.48,-8.7,-7.01,-4.68,-1.82,1.17,4.29,6.1,7.53,9.22,9.09,7.01,5.58,3.38,0.26,-2.86,-5.71,-7.66,-9.09,-9.48,-8.83,-7.27,-5.06,-2.21,0.91,4.03,5.97,7.27,9.22,9.22,7.27,5.84,3.9,0.78,-2.21,-5.19,-7.4,-8.96,-9.48,-8.96,-7.53,-5.19,-2.47,0.52,3.64,5.71,7.27,9.09,9.22,7.27,5.97,4.03,0.91,-2.08,-5.19,-7.4,-8.83,-9.48,-8.96,-7.53,-5.06,-2.21,0.78,3.64,5.71,7.27,9.22,9.09,7.14,5.84,3.64,0.65,-2.34,-5.32,-7.4,-8.96,-9.48,-8.83,-7.4,-5.19,-2.47,0.52,3.77,5.84,7.01,9.09,9.22,8.31,6.1,4.16,1.17,-2.08]}},"30":{"n_samples":10924,"n_rev":597,"period":[18.2753,0.1025],"bx":[0.293,0.0281],"by":[1.3474,0.0278],"bz":[2.9712,0.0251],"major":[2.9779,0.0251],"minor":[1.3326,0.0276],"tilt":[-4.2291,0.6963],"phase_yz":[97.4836,1.2214],"off":[0.007,0.06,-0.025],"thd_z":0.45,"thd_y":0.66,"temp":[22.12,23.08],"wave":{"bx":{"mean":[-0.002,0.036,0.081,0.109,0.137,0.171,0.205,0.246,0.259,0.264,0.28,0.289,0.287,0.298,0.29,0.29,0.266,0.24,0.228,0.198,0.157,0.136,0.088,0.058,0.028,-0.023,-0.053,-0.099,-0.127,-0.168,-0.19,-0.222,-0.241,-0.255,-0.273,-0.283,-0.288,-0.287,-0.273,-0.258,-0.251,-0.237,-0.205,-0.183,-0.136,-0.113,-0.082,-0.043],"sd":[0.094,0.088,0.088,0.086,0.086,0.086,0.088,0.092,0.083,0.086,0.083,0.094,0.089,0.091,0.086,0.09,0.092,0.087,0.092,0.086,0.085,0.091,0.085,0.086,0.084,0.078,0.094,0.087,0.083,0.092,0.085,0.086,0.089,0.087,0.09,0.091,0.089,0.086,0.087,0.086,0.086,0.09,0.086,0.087,0.092,0.093,0.086,0.085]},"by":{"mean":[-1.28,-1.271,-1.252,-1.2,-1.138,-1.05,-0.942,-0.816,-0.677,-0.517,-0.371,-0.207,-0.015,0.157,0.328,0.504,0.67,0.811,0.965,1.071,1.191,1.271,1.347,1.388,1.4,1.392,1.382,1.329,1.264,1.178,1.063,0.943,0.805,0.643,0.475,0.315,0.142,-0.047,-0.219,-0.374,-0.55,-0.703,-0.829,-0.942,-1.057,-1.152,-1.219,-1.261],"sd":[0.083,0.083,0.092,0.088,0.087,0.092,0.096,0.1,0.1,0.094,0.089,0.104,0.101,0.107,0.099,0.1,0.1,0.095,0.087,0.099,0.088,0.093,0.086,0.076,0.087,0.085,0.077,0.093,0.092,0.093,0.086,0.097,0.086,0.096,0.109,0.097,0.1,0.106,0.099,0.097,0.092,0.098,0.087,0.089,0.085,0.094,0.085,0.089]},"bz":{"mean":[0.175,0.594,0.963,1.318,1.654,1.959,2.209,2.46,2.64,2.786,2.893,2.941,2.945,2.882,2.792,2.628,2.442,2.201,1.914,1.613,1.258,0.902,0.534,0.159,-0.235,-0.624,-1.006,-1.348,-1.696,-2.01,-2.268,-2.517,-2.707,-2.856,-2.944,-2.997,-2.999,-2.933,-2.822,-2.672,-2.487,-2.236,-1.969,-1.671,-1.314,-0.967,-0.596,-0.23],"sd":[0.14,0.124,0.123,0.134,0.126,0.109,0.111,0.099,0.077,0.081,0.073,0.071,0.069,0.077,0.079,0.08,0.105,0.109,0.113,0.125,0.128,0.142,0.13,0.144,0.148,0.135,0.142,0.133,0.12,0.115,0.101,0.097,0.082,0.074,0.075,0.08,0.075,0.081,0.083,0.087,0.096,0.105,0.118,0.125,0.125,0.132,0.122,0.096]}},"raw":{"bx":[0.0,-0.13,-0.26,-0.13,-0.26,-0.26,-0.26,-0.13,-0.13,-0.13,0.13,0.26,0.26,0.39,0.39,0.26,0.26,0.0,0.0,0.0,-0.26,-0.26,-0.26,-0.26,-0.26,-0.26,0.0,0.0,0.0,0.13,0.26,0.39,0.26,0.0,0.26,0.26,0.0,0.0,-0.13,-0.26,-0.39,-0.13,-0.26,-0.13,-0.13,0.0,0.13,0.0,0.13,0.39,0.26,0.26,0.13,0.13,0.13,-0.13,-0.13,0.0,-0.13,-0.26,-0.26,-0.26,-0.26,-0.13,0.13,0.13,0.26,0.26,0.39,0.26,0.26,0.13,0.0,0.0,0.0,-0.13,-0.26,-0.26,-0.13,-0.26,-0.26,-0.13,-0.13,0.13,0.13,0.13,0.39,0.26,0.13,0.13,0.13,0.0],"by":[1.43,1.17,0.91,0.65,0.13,-0.26,-0.78,-1.17,-1.17,-1.3,-1.17,-0.91,-0.39,-0.13,0.26,0.78,1.04,1.3,1.43,1.3,1.04,0.78,0.26,-0.26,-0.65,-0.91,-1.17,-1.3,-1.17,-0.91,-0.78,-0.26,0.26,0.78,1.04,1.3,1.43,1.3,1.17,0.91,0.52,0.0,-0.26,-0.78,-0.91,-1.17,-1.3,-1.04,-0.78,-0.39,0.0,0.39,0.78,1.3,1.43,1.43,1.3,1.04,0.65,0.26,-0.39,-0.52,-1.04,-1.43,-1.17,-1.17,-0.91,-0.52,-0.26,0.26,0.65,1.04,1.04,1.56,1.3,1.17,0.78,0.52,0.0,-0.39,-0.78,-1.04,-1.3,-1.17,-1.04,-0.78,-0.52,0.0,0.52,1.04,1.17,1.43],"bz":[-0.78,-1.82,-2.47,-2.86,-2.99,-2.73,-2.08,-1.43,-0.52,0.65,1.56,2.34,2.73,2.99,2.73,2.34,1.56,0.65,-0.52,-1.43,-2.21,-2.86,-3.12,-3.12,-2.47,-1.82,-0.78,0.26,1.17,2.21,2.6,2.86,2.86,2.47,1.82,0.91,0.0,-1.04,-2.08,-2.6,-2.86,-2.86,-2.6,-2.08,-1.17,-0.13,0.78,1.56,2.34,2.73,2.99,2.6,2.21,1.3,0.39,-0.52,-1.56,-2.34,-2.86,-3.12,-2.86,-2.47,-1.56,-0.65,0.39,1.3,2.08,2.73,2.86,2.86,2.34,1.69,0.78,-0.13,-1.3,-2.08,-2.73,-2.86,-2.86,-2.6,-1.95,-1.04,0.0,0.91,1.82,2.47,2.86,2.86,2.6,2.08,1.3,0.26]}},"37":{"n_samples":10394,"n_rev":566,"period":[18.318,0.1734],"bx":[0.0681,0.026],"by":[0.6787,0.0271],"bz":[1.5818,0.0237],"major":[1.5843,0.0238],"minor":[0.6727,0.0271],"tilt":[-3.3508,1.3266],"phase_yz":[96.4207,2.5515],"off":[0.006,0.065,-0.026],"thd_z":0.98,"thd_y":1.43,"temp":[22.12,23.08],"wave":{"bx":{"mean":[0.027,0.028,0.033,0.047,0.034,0.049,0.056,0.07,0.067,0.073,0.064,0.068,0.072,0.056,0.071,0.055,0.049,0.043,0.035,0.028,0.029,0.014,0.006,-0.005,-0.007,-0.026,-0.018,-0.037,-0.039,-0.044,-0.045,-0.055,-0.058,-0.047,-0.068,-0.055,-0.053,-0.06,-0.048,-0.03,-0.03,-0.039,-0.018,-0.009,-0.009,-0.01,0.004,0.012],"sd":[0.08,0.083,0.082,0.084,0.079,0.088,0.089,0.082,0.089,0.077,0.084,0.088,0.083,0.083,0.084,0.09,0.084,0.078,0.082,0.086,0.087,0.083,0.084,0.088,0.087,0.083,0.09,0.086,0.092,0.085,0.081,0.086,0.091,0.081,0.087,0.085,0.084,0.083,0.084,0.086,0.08,0.087,0.087,0.087,0.083,0.081,0.084,0.08]},"by":{"mean":[-0.604,-0.608,-0.585,-0.571,-0.526,-0.479,-0.431,-0.367,-0.299,-0.2,-0.12,-0.059,0.039,0.128,0.22,0.291,0.376,0.456,0.528,0.594,0.647,0.682,0.701,0.743,0.747,0.744,0.723,0.698,0.666,0.619,0.563,0.488,0.421,0.341,0.269,0.16,0.091,-0.014,-0.093,-0.177,-0.245,-0.338,-0.406,-0.451,-0.51,-0.549,-0.58,-0.603],"sd":[0.084,0.087,0.08,0.084,0.09,0.092,0.084,0.09,0.089,0.082,0.09,0.096,0.092,0.09,0.087,0.089,0.089,0.083,0.086,0.091,0.086,0.082,0.083,0.083,0.082,0.087,0.084,0.086,0.09,0.087,0.081,0.099,0.086,0.085,0.093,0.092,0.092,0.092,0.09,0.091,0.085,0.084,0.087,0.082,0.095,0.081,0.082,0.082]},"bz":{"mean":[0.065,0.327,0.524,0.683,0.888,1.031,1.178,1.307,1.399,1.478,1.525,1.546,1.552,1.511,1.472,1.378,1.289,1.151,0.999,0.838,0.645,0.47,0.283,0.06,-0.157,-0.376,-0.561,-0.742,-0.932,-1.089,-1.228,-1.357,-1.462,-1.541,-1.578,-1.594,-1.602,-1.566,-1.53,-1.438,-1.328,-1.193,-1.041,-0.894,-0.705,-0.526,-0.322,-0.133],"sd":[0.069,0.07,0.083,0.117,0.09,0.087,0.09,0.093,0.07,0.073,0.066,0.059,0.078,0.071,0.075,0.074,0.085,0.089,0.085,0.098,0.097,0.096,0.105,0.103,0.101,0.089,0.092,0.092,0.095,0.091,0.093,0.087,0.08,0.067,0.07,0.068,0.069,0.062,0.07,0.078,0.086,0.076,0.096,0.094,0.11,0.082,0.07,0.024]}},"raw":{"bx":[0.13,-0.13,0.0,-0.13,-0.13,0.0,-0.13,-0.13,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.26,0.13,0.0,0.0,0.0,0.0,0.0,-0.13,0.0,0.0,-0.13,0.0,0.13,0.0,0.13,0.0,0.13,0.0,0.13,0.0,0.0,0.13,0.0,-0.13,-0.13,-0.13,0.0,0.0,0.0,-0.13,0.13,0.0,0.26,0.0,0.13,0.0,0.13,0.0,0.13,0.0,-0.26,0.13,0.0,-0.13,-0.13,-0.13,0.13,-0.26,-0.13,0.0,-0.13,0.0,0.13,0.13,0.0,0.0,0.0,0.0,-0.13,0.0,0.0,-0.13,-0.26,0.0,-0.13,-0.13,-0.13,0.0,0.0,0.13,0.0,0.0,0.0,0.0,0.13,0.13],"by":[0.78,0.65,0.78,0.65,0.26,0.13,0.13,-0.13,-0.26,-0.65,-0.65,-0.65,-0.39,-0.39,0.0,0.13,0.26,0.65,0.52,0.65,0.78,0.65,0.52,0.52,0.0,-0.13,-0.26,-0.52,-0.52,-0.52,-0.52,-0.39,-0.39,0.0,0.26,0.39,0.65,0.65,0.65,0.65,0.65,0.26,0.26,0.0,-0.39,-0.39,-0.52,-0.52,-0.52,-0.52,-0.26,-0.26,0.13,0.39,0.39,0.65,0.78,0.78,0.78,0.52,0.26,0.0,-0.26,-0.39,-0.52,-0.52,-0.65,-0.26,-0.26,-0.26,0.13,0.26,0.39,0.65,0.78,0.78,0.65,0.52,0.39,0.13,-0.26,-0.39,-0.39,-0.65,-0.52,-0.52,-0.39,-0.39,0.0,0.26,0.39,0.52],"bz":[0.39,-0.13,-0.52,-1.04,-1.3,-1.69,-1.56,-1.43,-1.04,-0.52,0.0,0.52,0.91,1.3,1.56,1.43,1.43,1.04,0.52,0.13,-0.52,-0.91,-1.17,-1.56,-1.56,-1.43,-1.17,-0.78,-0.13,0.26,0.78,1.17,1.56,1.56,1.43,1.3,0.78,0.39,-0.39,-0.91,-1.17,-1.56,-1.56,-1.56,-1.3,-0.91,-0.39,0.13,0.65,1.04,1.3,1.43,1.43,1.3,0.91,0.52,-0.13,-0.52,-1.04,-1.43,-1.56,-1.56,-1.43,-1.04,-0.65,0.0,0.39,1.04,1.17,1.56,1.56,1.3,1.04,0.65,0.13,-0.39,-0.91,-1.3,-1.69,-1.56,-1.56,-1.3,-0.65,-0.26,0.39,0.78,1.17,1.43,1.56,1.56,1.3,0.65]}},"20old":{"n_samples":10429,"n_rev":572,"period":[18.1846,0.0788],"bx":[0.3408,0.0293],"by":[4.2967,0.0298],"bz":[6.9783,0.0273],"major":[7.388,0.0276],"minor":[3.5461,0.0279],"tilt":[-21.9823,0.3219],"phase_yz":[119.0977,0.4247],"off":[0.032,0.075,-0.183],"thd_z":3.71,"thd_y":0.37,"temp":[22.12,23.08]}};
+const DIST=[12,20,30,37];
+const $=id=>document.getElementById(id);
+const S={model:'finite',ref:'axis',cal:'datasheet',J:1.32,Br:1.32,delta:1,align:false,D:6.35,L:12.7,sel:12};
+
+/* ---------- physics ---------- */
+function gl(n){const x=[],w=[];for(let i=1;i<=n;i++){let z=Math.cos(Math.PI*(i-.25)/(n+.5)),pp;for(let k=0;k<100;k++){let p1=1,p2=0;for(let j=1;j<=n;j++){const p3=p2;p2=p1;p1=((2*j-1)*z*p2-(j-1)*p3)/j;}pp=n*(z*p1-p2)/(z*z-1);const z1=z;z=z1-p1/pp;if(Math.abs(z-z1)<1e-14)break;}x.push(z);w.push(2/((1-z*z)*pp*pp));}return{x,w};}
+const GL=gl(32), NPHI=64;
+const cache=new Map();
+/* radial & tangential amplitude (mT) per 1 T of J at perpendicular distance r (mm) from the axis, in the midplane */
+function perJ(r){
+  const R=S.D/2, L=S.L;
+  if(S.model==='dipole'){const V=Math.PI*R*R*L;const k=V/(4*Math.PI*r*r*r)*1000;return[2*k,k];}
+  const key=r.toFixed(4)+'|'+R+'|'+L; if(cache.has(key))return cache.get(key);
+  let bz=0,by=0;const dphi=2*Math.PI/NPHI;
+  for(let i=0;i<NPHI;i++){const ph=i*dphi,c=Math.cos(ph),s=Math.sin(ph);
+    const sy=R*s,sz=R*c;
+    for(let j=0;j<GL.x.length;j++){const x=GL.x[j]*L/2,w=GL.w[j]*L/2*dphi*R;
+      const dx=-x,dy=-sy,dz=-r-sz;const d3=Math.pow(dx*dx+dy*dy+dz*dz,1.5);
+      bz+=c*w*dz/d3; by+=s*w*dy/d3;}}
+  const out=[Math.abs(bz)/(4*Math.PI)*1000,Math.abs(by)/(4*Math.PI)*1000];
+  if(cache.size>4000)cache.clear(); cache.set(key,out); return out;
+}
+const rOf=d=>d+(S.ref==='surface'?S.D/2:0);
+const tiltOf=d=>DATA[d].tilt[0];
+function rEff(d){let r=rOf(d);if(S.align)r=r/Math.cos(tiltOf(d)*Math.PI/180);return r;}
+function calibrate(){
+  if(S.cal==='datasheet')return S.Br;
+  if(S.cal==='manual')return S.J;
+  if(S.cal==='all'){let s=0;DIST.forEach(d=>{s+=Math.log(DATA[d].major[0]/perJ(rEff(d))[0]);});return Math.exp(s/DIST.length);}
+  const d=+S.cal;return DATA[d].major[0]/perJ(rEff(d))[0];
+}
+function pred(d,J){const p=perJ(rEff(d));return[J*p[0],J*p[1]];}
+
+/* ---------- svg helpers ---------- */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function txt(p,x,y,s,cls,a={}){const e=el('text',Object.assign({x,y,class:cls||''},a),p);e.textContent=s;return e;}
+const tip=$('tip');
+function showTip(host,x,y,html){const b=host.getBoundingClientRect(),hb=document.body.getBoundingClientRect();tip.innerHTML=html;tip.hidden=false;tip.style.left=(b.left-hb.left+x)+'px';tip.style.top=(b.top-hb.top+y)+'px';}
+function hideTip(){tip.hidden=true;}
+function fmt(v,dg){if(!isFinite(v))return '–';const a=Math.abs(v);dg=dg??(a>=100?1:a>=10?2:3);return v.toFixed(dg);}
+function errCls(e){const a=Math.abs(e);return a<=10?'g':a<=25?'w':'b';}
+function sgn(e){return (e>=0?'+':'−')+Math.abs(e).toFixed(1)+'%';}
+function frame(host,h){host.innerHTML='';const W=Math.max(300,host.clientWidth);const svg=el('svg',{width:W,height:h,viewBox:`0 0 ${W} ${h}`,role:'img'},host);return{svg,W,H:h};}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+/* ---------- Figure 1 ---------- */
+function drawAmp(J){
+  const host=$('ch-amp');const {svg,W,H}=frame(host,Math.min(420,Math.max(300,host.clientWidth*0.58)));
+  svg.setAttribute('aria-label','Log-log plot of field amplitude versus distance with model curves and measured points');
+  const m={l:52,r:16,t:12,b:40};const x0=8,x1=60,y0=0.3,y1=200;
+  const X=v=>m.l+(Math.log(v)-Math.log(x0))/(Math.log(x1)-Math.log(x0))*(W-m.l-m.r);
+  const Y=v=>H-m.b-(Math.log(v)-Math.log(y0))/(Math.log(y1)-Math.log(y0))*(H-m.t-m.b);
+  [0.5,1,2,5,10,20,50,100,200].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:'var(--grid)'},svg);txt(svg,m.l-6,Y(v)+4,v,'tick',{'text-anchor':'end'});});
+  [8,10,12,15,20,30,37,50,60].forEach(v=>{el('line',{y1:m.t,y2:H-m.b,x1:X(v),x2:X(v),stroke:'var(--grid)'},svg);txt(svg,X(v),H-m.b+16,v,'tick',{'text-anchor':'middle'});});
+  txt(svg,(m.l+W-m.r)/2,H-6,S.align?'r, distance from magnet axis to sensing point (mm)':(S.ref==='axis'?'d, distance from magnet axis (mm)':'d, gap from magnet surface (mm)'),'axl',{'text-anchor':'middle'});
+  txt(svg,14,(m.t+H-m.b)/2,'amplitude (mT)','axl',{'text-anchor':'middle',transform:`rotate(-90 14 ${(m.t+H-m.b)/2})`});
+  // sensor range
+  el('line',{x1:m.l,x2:W-m.r,y1:Y(160),y2:Y(160),stroke:'var(--muted)','stroke-dasharray':'2 4'},svg);
+  txt(svg,W-m.r-4,Y(160)-5,'TLE493D ±160 mT range','tick',{'text-anchor':'end'});
+  const xs=[];for(let i=0;i<=120;i++)xs.push(Math.exp(Math.log(x0)+(Math.log(x1)-Math.log(x0))*i/120));
+  const offs=S.ref==='surface'?S.D/2:0;
+  // curve as function of plotted x: x is d (or r if align). Model evaluated at r = x+offs (x is d), or r=x when align (axis-referenced r)
+  const rx=x=>S.align?x+(S.ref==='surface'?S.D/2:0):x+offs;
+  const valid=x=>rx(x)>S.D/2+0.2;
+  [[0,'--s1','--band1'],[1,'--s2','--band2']].forEach(([k,col,band])=>{
+    if(S.delta>0){let up='',dn='';const pts=xs.filter(x=>valid(x-S.delta));
+      pts.forEach((x,i)=>{const hi=Math.min(y1,J*perJ(rx(x)-S.delta)[k]),lo=Math.max(y0,J*perJ(rx(x)+S.delta)[k]);up+=(i?'L':'M')+X(x)+' '+Y(hi);dn=`L${X(x)} ${Y(lo)}`+dn;});
+      el('path',{d:up+dn.replace(/^L/,'L')+'Z',fill:`var(${band})`,stroke:'none'},svg);}
+    let p='';xs.filter(valid).forEach((x,i)=>{const v=Math.min(y1,J*perJ(rx(x))[k]);p+=(i?'L':'M')+X(x)+' '+Y(v);});
+    el('path',{d:p,fill:'none',stroke:`var(${col})`,'stroke-width':2},svg);
+  });
+  // measured points
+  DIST.forEach(d=>{const D=DATA[d];const xp=S.align?(rEff(d)-(S.ref==='surface'?S.D/2:0)):d;
+    [['major','--s1','B_r'],['minor','--s2','B_t']].forEach(([k,col,nm])=>{
+      const v=D[k][0],sd=D[k][1];const cx=X(xp),cy=Y(v);
+      el('line',{x1:cx,x2:cx,y1:Y(v+sd),y2:Y(Math.max(y0,v-sd)),stroke:`var(${col})`,'stroke-width':1.5},svg);
+      if(String(d)===S.cal&&k==='major')el('circle',{cx,cy,r:10,fill:'none',stroke:'var(--accent)','stroke-width':1.5},svg);
+      el('circle',{cx,cy,r:5,fill:'var(--panel)',stroke:`var(${col})`,'stroke-width':2},svg);
+      const hit=el('circle',{cx,cy,r:13,fill:'transparent',style:'cursor:pointer'},svg);
+      const pr=pred(d,J)[k==='major'?0:1];
+      hit.addEventListener('pointerenter',()=>showTip(host,cx,cy-6,`${d} mm · ${nm.replace('_','')}<br>measured ${fmt(v)} ± ${sd.toFixed(3)} mT<br>model ${fmt(pr)} mT (${sgn((pr-v)/v*100)})`));
+      hit.addEventListener('pointerleave',hideTip);
+    });
+  });
+  { const O=DATA['20old'];const xo=X(20);[[O.major,'B_r'],[O.minor,'B_t']].forEach(([v,nm])=>{const cy=Y(v[0]);el('path',{d:`M${xo-5} ${cy-5}L${xo+5} ${cy+5}M${xo-5} ${cy+5}L${xo+5} ${cy-5}`,stroke:'var(--muted)','stroke-width':2},svg);const h=el('circle',{cx:xo,cy,r:12,fill:'transparent'},svg);h.addEventListener('pointerenter',()=>showTip(host,xo,cy-6,`20 mm, first attempt (misaligned, ψ = 22°)<br>${nm.replace('_','')} = ${fmt(v[0])} mT, not used`));h.addEventListener('pointerleave',hideTip);}); }
+  // direct labels
+  const lx=x1*0.72;if(valid(lx)){txt(svg,X(lx),Y(J*perJ(rx(lx))[0])-8,'Bᵣ','dl',{fill:'var(--s1)','text-anchor':'middle'});txt(svg,X(lx),Y(J*perJ(rx(lx))[1])+16,'Bₜ','dl',{fill:'var(--s2)','text-anchor':'middle'});}
+}
+
+/* ---------- Figures 2 & 3 ---------- */
+const NB=48;
+function waveFrame(d){
+  const D=DATA[d],psi=S.align?D.tilt[0]*Math.PI/180:0;
+  const Yb=D.wave.by.mean,Zb=D.wave.bz.mean;const oy=Yb.reduce((a,b)=>a+b)/NB,oz=Zb.reduce((a,b)=>a+b)/NB;
+  let cu=0,su=0,sv=0;
+  for(let k=0;k<NB;k++){const ph=(k+.5)*2*Math.PI/NB;const u=(Yb[k]-oy)*Math.sin(psi)+(Zb[k]-oz)*Math.cos(psi);cu+=u*Math.cos(ph);su+=u*Math.sin(ph);}
+  const alpha=Math.atan2(su,cu);
+  for(let k=0;k<NB;k++){const ph=(k+.5)*2*Math.PI/NB;const v=(Yb[k]-oy)*Math.cos(psi)-(Zb[k]-oz)*Math.sin(psi);sv+=v*Math.sin(ph-alpha);}
+  return{psi,alpha,s:sv>=0?1:-1,oy,oz};
+}
+function modelYZ(th,A,f){const u=A[0]*Math.cos(th),v=f.s*A[1]*Math.sin(th);return[u*Math.sin(f.psi)+v*Math.cos(f.psi),u*Math.cos(f.psi)-v*Math.sin(f.psi)];}
+function drawWave(J){
+  const d=S.sel,D=DATA[d],f=waveFrame(d),A=pred(d,J);
+  const host=$('ch-wave');const {svg,W,H}=frame(host,300);
+  svg.setAttribute('aria-label',`Measured and modeled By and Bz over one revolution at ${d} mm`);
+  const m={l:50,r:12,t:10,b:36};const lim=Math.max(A[0],D.major[0])*1.15;
+  const X=v=>m.l+v/360*(W-m.l-m.r),Y=v=>m.t+(lim-v)/(2*lim)*(H-m.t-m.b);
+  const step=niceStep(lim);for(let v=-Math.floor(lim/step)*step;v<=lim;v+=step){el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:Math.abs(v)<1e-9?'var(--rule)':'var(--grid)'},svg);txt(svg,m.l-6,Y(v)+4,+v.toFixed(2),'tick',{'text-anchor':'end'});}
+  [0,90,180,270,360].forEach(v=>txt(svg,X(v),H-m.b+16,v+'°','tick',{'text-anchor':'middle'}));
+  txt(svg,(m.l+W-m.r)/2,H-4,'shaft angle θ from the sensor direction','axl',{'text-anchor':'middle'});
+  [[1,'--s2','by'],[0,'--s1','bz']].forEach(([k,col,nm])=>{
+    let p='';for(let i=0;i<=180;i++){const th=i*2*Math.PI/180;const yz=modelYZ(th,A,f);p+=(i?'L':'M')+X(i*2)+' '+Y(yz[k===0?1:0]);}
+    el('path',{d:p,fill:'none',stroke:`var(${col})`,'stroke-width':2},svg);
+    for(let b=0;b<NB;b++){let th=((b+.5)*360/NB-f.alpha*180/Math.PI)%360;if(th<0)th+=360;
+      const v=D.wave[nm].mean[b]-(nm==='by'?f.oy:f.oz),sd=D.wave[nm].sd[b];
+      el('line',{x1:X(th),x2:X(th),y1:Y(v+sd),y2:Y(v-sd),stroke:`var(${col})`,'stroke-width':1},svg);
+      el('circle',{cx:X(th),cy:Y(v),r:3.5,fill:'var(--panel)',stroke:`var(${col})`,'stroke-width':1.6},svg);}
+  });
+  // crosshair
+  const cross=el('line',{y1:m.t,y2:H-m.b,stroke:'var(--muted)','stroke-dasharray':'3 3',visibility:'hidden'},svg);
+  const ov=el('rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:'transparent'},svg);
+  ov.addEventListener('pointermove',e=>{const bb=svg.getBoundingClientRect();const px=e.clientX-bb.left;const th=Math.max(0,Math.min(360,(px-m.l)/(W-m.l-m.r)*360));cross.setAttribute('x1',X(th));cross.setAttribute('x2',X(th));cross.setAttribute('visibility','visible');
+    const yz=modelYZ(th*Math.PI/180,A,f);let b=Math.round(((th+f.alpha*180/Math.PI)%360+360)%360/(360/NB)-.5);b=(b+NB)%NB;
+    showTip(host,X(th),m.t+10,`θ = ${th.toFixed(0)}°<br>B<sub>z</sub> model ${fmt(yz[1])} · meas ${fmt(D.wave.bz.mean[b]-f.oz)}<br>B<sub>y</sub> model ${fmt(yz[0])} · meas ${fmt(D.wave.by.mean[b]-f.oy)} mT`);});
+  ov.addEventListener('pointerleave',()=>{cross.setAttribute('visibility','hidden');hideTip();});
+  txt(svg,12,(m.t+H-m.b)/2,'field (mT)','axl',{'text-anchor':'middle',transform:`rotate(-90 12 ${(m.t+H-m.b)/2})`});
+}
+function niceStep(lim){const raw=lim/2.5;const p=Math.pow(10,Math.floor(Math.log10(raw)));const n=raw/p;return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p;}
+function drawEll(J){
+  const d=S.sel,D=DATA[d],f=waveFrame(d),A=pred(d,J);
+  const host=$('ch-ell');const {svg,W,H}=frame(host,Math.min(300,host.clientWidth));
+  svg.setAttribute('aria-label',`Field ellipse By versus Bz at ${d} mm`);
+  const m=30,sz=Math.min(W,H)-2*m,cx=W/2,cy=H/2;const lim=Math.max(A[0],D.major[0])*1.12;const k=sz/2/lim;
+  const step=niceStep(lim);
+  for(let v=-Math.floor(lim/step)*step;v<=lim+1e-9;v+=step){el('line',{x1:cx+v*k,x2:cx+v*k,y1:cy-sz/2,y2:cy+sz/2,stroke:Math.abs(v)<1e-9?'var(--rule)':'var(--grid)'},svg);el('line',{y1:cy-v*k,y2:cy-v*k,x1:cx-sz/2,x2:cx+sz/2,stroke:Math.abs(v)<1e-9?'var(--rule)':'var(--grid)'},svg);
+    if(Math.abs(v)>1e-9){txt(svg,cx+v*k,cy+sz/2+14,+v.toFixed(2),'tick',{'text-anchor':'middle'});}}
+  txt(svg,cx+sz/2,cy-6,'By (mT)','axl',{'text-anchor':'end'});txt(svg,cx+6,cy-sz/2+10,'Bz (mT)','axl');
+  let p='';for(let i=0;i<=120;i++){const yz=modelYZ(i*2*Math.PI/120,A,f);p+=(i?'L':'M')+(cx+yz[0]*k)+' '+(cy-yz[1]*k);}
+  el('path',{d:p+'Z',fill:'none',stroke:'var(--accent)','stroke-width':2,'stroke-dasharray':'6 4'},svg);
+  for(let b=0;b<NB;b++){const y=D.wave.by.mean[b]-f.oy,z=D.wave.bz.mean[b]-f.oz;el('circle',{cx:cx+y*k,cy:cy-z*k,r:3.5,fill:'var(--ink-2)',stroke:'var(--panel)','stroke-width':1},svg);}
+  txt(svg,8,14,`${d} mm · tilt ψ = ${D.tilt[0].toFixed(1)}°`,'tick');
+}
+
+/* ---------- Figure 4 ---------- */
+function drawRatio(){
+  const host=$('ch-ratio');const {svg,W,H}=frame(host,240);
+  svg.setAttribute('aria-label','Axial ratio versus distance');
+  const m={l:46,r:16,t:10,b:36};const x0=8,x1=60,y0=0.35,y1=0.8;
+  const X=v=>m.l+(Math.log(v)-Math.log(x0))/(Math.log(x1)-Math.log(x0))*(W-m.l-m.r),Y=v=>m.t+(y1-v)/(y1-y0)*(H-m.t-m.b);
+  [0.4,0.5,0.6,0.7,0.8].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:'var(--grid)'},svg);txt(svg,m.l-6,Y(v)+4,v.toFixed(1),'tick',{'text-anchor':'end'});});
+  [8,10,12,15,20,30,37,50,60].forEach(v=>txt(svg,X(v),H-m.b+16,v,'tick',{'text-anchor':'middle'}));
+  txt(svg,(m.l+W-m.r)/2,H-4,'distance (mm)','axl',{'text-anchor':'middle'});
+  el('line',{x1:m.l,x2:W-m.r,y1:Y(0.5),y2:Y(0.5),stroke:'var(--muted)','stroke-width':1.5,'stroke-dasharray':'5 4'},svg);
+  txt(svg,W-m.r-4,Y(0.5)-6,'point dipole, κ = 0.5','tick',{'text-anchor':'end'});
+  const keep=S.model;S.model='finite';let p='',first=true;
+  for(let i=0;i<=80;i++){const x=Math.exp(Math.log(x0)+(Math.log(x1)-Math.log(x0))*i/80);const r=x+(S.ref==='surface'?S.D/2:0);if(r<=S.D/2+0.2)continue;const q=perJ(r);const v=q[1]/q[0];p+=(first?'M':'L')+X(x)+' '+Y(Math.min(y1,v));first=false;}
+  S.model=keep;el('path',{d:p,fill:'none',stroke:'var(--accent)','stroke-width':2},svg);
+  txt(svg,X(9.5),Y(0.5)-40,`finite ${S.D}×${S.L} mm`,'tick',{fill:'var(--accent)'});
+  DIST.forEach(d=>{const D=DATA[d];const v=D.minor[0]/D.major[0];const sd=v*Math.hypot(D.minor[1]/D.minor[0],D.major[1]/D.major[0]);
+    const cx=X(d),cy=Y(v);el('line',{x1:cx,x2:cx,y1:Y(v+sd),y2:Y(v-sd),stroke:'var(--ink-2)'},svg);
+    el('circle',{cx,cy,r:5,fill:'var(--ink)',stroke:'var(--panel)','stroke-width':1.5},svg);
+    const hit=el('circle',{cx,cy,r:13,fill:'transparent'},svg);hit.addEventListener('pointerenter',()=>showTip(host,cx,cy-6,`${d} mm · κ = ${v.toFixed(3)} ± ${sd.toFixed(3)}`));hit.addEventListener('pointerleave',hideTip);});
+}
+
+/* ---------- Figure 5 ---------- */
+function drawRaw(){
+  const host=$('ch-raw');const {svg,W,H}=frame(host,200);const R=DATA[12].raw;const n=R.bz.length;
+  svg.setAttribute('aria-label','Raw Bx By Bz samples at 12 mm');
+  const m={l:40,r:10,t:8,b:30};const X=i=>m.l+i/(n-1)*(W-m.l-m.r),Y=v=>m.t+(50-v)/100*(H-m.t-m.b);
+  [-40,-20,0,20,40].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:v?'var(--grid)':'var(--rule)'},svg);txt(svg,m.l-6,Y(v)+4,v,'tick',{'text-anchor':'end'});});
+  [0,20,40,60,80].forEach(v=>txt(svg,X(v),H-m.b+15,v,'tick',{'text-anchor':'middle'}));
+  txt(svg,W-m.r,H-3,'sample index','axl',{'text-anchor':'end'});
+  [['bz','--s1'],['by','--s2'],['bx','--s3']].forEach(([k,c])=>{let p='';R[k].forEach((v,i)=>p+=(i?'L':'M')+X(i)+' '+Y(v));el('path',{d:p,fill:'none',stroke:`var(${c})`,'stroke-width':1.6},svg);R[k].forEach((v,i)=>el('circle',{cx:X(i),cy:Y(v),r:1.8,fill:`var(${c})`},svg));});
+}
+
+/* ---------- table, chips, findings, readout ---------- */
+function update(){
+  const J=calibrate();S.Jcur=J;
+  if(S.cal!=='manual'){$('in-J').value=J.toFixed(3);} $('jval').textContent=J.toFixed(3);
+  const tb=document.querySelector('#tbl tbody');tb.innerHTML='';const predErrs=[];
+  DIST.forEach(d=>{const D=DATA[d],P=pred(d,J),er=(P[0]-D.major[0])/D.major[0]*100,et=(P[1]-D.minor[0])/D.minor[0]*100;
+    const isCal=S.cal===String(d),role=isCal?'<span class="pill cal">calibration</span>':(S.cal==='all'||S.cal==='manual')?'<span class="pill">'+(S.cal==='all'?'fit':'a priori')+'</span>':'<span class="pill">prediction</span>';
+    if(!isCal)predErrs.push(Math.abs(er));
+    const rtxt=S.align?` <span class="hint">(r = ${rEff(d).toFixed(1)})</span>`:'';
+    tb.insertAdjacentHTML('beforeend',`<tr><td class="mono">${d} mm${rtxt}</td><td>${role}</td><td class="mono">${fmt(D.major[0])} ± ${D.major[1].toFixed(3)}</td><td class="mono">${fmt(P[0])}</td><td class="err ${isCal?'':errCls(er)}">${isCal?'fixed':sgn(er)}</td><td class="mono">${fmt(D.minor[0])} ± ${D.minor[1].toFixed(3)}</td><td class="mono">${fmt(P[1])}</td><td class="err ${errCls(et)}">${sgn(et)}</td><td class="mono">${(D.minor[0]/D.major[0]).toFixed(3)} / ${(P[1]/P[0]).toFixed(3)}</td></tr>`);
+  });
+  const V=Math.PI*(S.D/2)**2*S.L*1e-9, mom=J*V/(4e-7*Math.PI);
+  const mae=predErrs.reduce((a,b)=>a+b,0)/predErrs.length;
+  const btErr=DIST.reduce((a,d)=>a+Math.abs((pred(d,J)[1]-DATA[d].minor[0])/DATA[d].minor[0]*100),0)/DIST.length;
+  $('readout').innerHTML=`<dt>J<sub>eff</sub></dt><dd>${J.toFixed(3)} T</dd><dt>moment m</dt><dd>${mom.toFixed(3)} A·m²</dd><dt>mean |err| B<sub>r</sub></dt><dd>${fmt(mae,1)} %</dd><dt>mean |err| B<sub>t</sub></dt><dd>${fmt(btErr,1)} %</dd>`;
+  const calTxt=S.cal==='datasheet'?'Br = '+S.Br.toFixed(2)+' T from datasheet, nothing fitted':S.cal==='all'?'fit to all four':S.cal==='manual'?'J set by hand':`calibrated at ${S.cal} mm`;
+  $('chips').innerHTML=`<span class="chip"><b>${S.model==='dipole'?'Point dipole':'Finite cylinder'}</b> · ${calTxt}</span><span class="chip ${mae<=10?'good':'warn'}">B<sub>r</sub> predictions: <b>${isFinite(mae)?mae.toFixed(1)+'% mean error':'–'}</b></span><span class="chip">J<sub>eff</sub> = <b>${J.toFixed(2)} T</b> · m = <b>${mom.toFixed(3)} A·m²</b></span>`;
+  drawAmp(J);drawWave(J);drawEll(J);drawRatio();drawCalc(J);drawPhysics(J);updateNotes();
+  legends();
+}
+function legends(){
+  $('leg1').innerHTML=`<span><i class="sw-line" style="border-color:var(--s1)"></i>B<sub>r</sub> model</span><span><i class="sw-line" style="border-color:var(--s2)"></i>B<sub>t</sub> model</span><span><i class="sw-band" style="background:var(--band1)"></i>model, d ± ${S.delta} mm</span><span><i class="sw-dot" style="border-color:var(--s1)"></i>B<sub>r</sub> measured</span><span><i class="sw-dot" style="border-color:var(--s2)"></i>B<sub>t</sub> measured</span>${S.cal!=='datasheet'&&S.cal!=='manual'&&S.cal!=='all'?'<span><i class="sw-dot" style="border-color:var(--accent);width:14px;height:14px"></i>calibration point</span>':''}<span style="color:var(--muted);font-family:var(--f-mono)">✕ 20 mm first attempt (not used)</span>`;
+  $('leg2').innerHTML=`<span><i class="sw-line" style="border-color:var(--s1)"></i>B<sub>z</sub> model</span><span><i class="sw-dot" style="border-color:var(--s1)"></i>B<sub>z</sub> measured</span><span><i class="sw-line" style="border-color:var(--s2)"></i>B<sub>y</sub> model</span><span><i class="sw-dot" style="border-color:var(--s2)"></i>B<sub>y</sub> measured</span>`;
+  $('leg3').innerHTML=`<span><i class="sw-dash" style="border-color:var(--accent)"></i>model ellipse</span><span><i class="sw-dot" style="border-color:var(--ink-2);background:var(--ink-2)"></i>measured</span>`;
+  $('leg4').innerHTML=`<span><i class="sw-line" style="border-color:var(--accent)"></i>finite cylinder</span><span><i class="sw-dash" style="border-color:var(--muted)"></i>point dipole</span><span><i class="sw-dot" style="border-color:var(--ink);background:var(--ink)"></i>measured ± SD</span>`;
+  $('leg5').innerHTML=`<span><i class="sw-line" style="border-color:var(--s1)"></i>B<sub>z</sub></span><span><i class="sw-line" style="border-color:var(--s2)"></i>B<sub>y</sub></span><span><i class="sw-line" style="border-color:var(--s3)"></i>B<sub>x</sub> (shaft axis)</span>`;
+}
+function drawCalc(J){
+  const r=+$('c-r').value,tgt=+$('c-tgt').value,a=+$('c-a').value,jc=+$('c-j').value,n=+$('c-n').value;
+  const out=$('c-out');if(!(r>S.D/2)||!(a>0)||!(jc>0)||!(n>0)||!(tgt>0)){out.innerHTML='<dt>Check inputs</dt><dd>The distance must be outside the magnet, and every value must be positive.</dd>';return;}
+  const P=J?[J*perJ(r)[0],J*perJ(r)[1]]:[0,0];const mi=n*jc*(a*1e-3)**3/(4e-7*Math.PI);
+  // solve for distance where Bt = tgt
+  let lo=S.D/2+0.3,hi=2000,ok=J*perJ(lo)[1]>=tgt;
+  if(ok){for(let i=0;i<60;i++){const mid=Math.sqrt(lo*hi);if(J*perJ(mid)[1]>=tgt)lo=mid;else hi=mid;}}
+  out.innerHTML=`<dt>|B| range over one turn</dt><dd>${fmt(P[1])} – ${fmt(P[0])} mT</dd><dt>Impeller moment m<sub>i</sub></dt><dd>${(mi*1e3).toFixed(2)} mA·m²</dd><dt>Max torque, weakest phase (m<sub>i</sub>B<sub>t</sub>)</dt><dd class="big">${(mi*P[1]*1e-3*1e6).toFixed(2)} µN·m</dd><dt>Max torque, strongest phase (m<sub>i</sub>B<sub>r</sub>)</dt><dd>${(mi*P[0]*1e-3*1e6).toFixed(2)} µN·m</dd><dt>Farthest distance with B<sub>t</sub> ≥ ${tgt} mT</dt><dd>${ok?lo.toFixed(1)+' mm':'not reachable'}</dd><dt>Sensor in range (≤160 mT) beyond</dt><dd>${(()=>{let l=S.D/2+0.3,h=2000;if(J*perJ(l)[0]<=160)return 'any distance';for(let i=0;i<60;i++){const mid=Math.sqrt(l*h);if(J*perJ(mid)[0]>160)l=mid;else h=mid;}return h.toFixed(1)+' mm';})()}</dd>`;
+}
+
+
+
+/* ---------- physics chain ---------- */
+function drawPhysics(J){
+  const per=DIST.map(d=>DATA[d].period[0]);const pm=per.reduce((a,b)=>a+b)/per.length;
+  const fs=+$('in-fs').value||1003;const f=fs/pm,w=2*Math.PI*f;
+  const r=+$('c-r').value,a=+$('c-a').value*1e-3,jc=+$('c-j').value,n=+$('c-n').value;
+  const Rb=+$('p-rb').value*1e-3,pitch=+$('p-pitch').value*1e-3,M=+$('p-mass').value*1e-3,Dt=+$('p-tube').value*1e-3;
+  const box=$('links');
+  if(!(r>S.D/2&&a>0&&jc>0&&n>0&&Rb>0&&pitch>0&&M>0&&Dt>0)){box.innerHTML='<p class="hint">Enter positive values for every input.</p>';return;}
+  const P=[J*perJ(r)[0]*1e-3,J*perJ(r)[1]*1e-3];const kap=P[1]/P[0];
+  const mi=n*jc*a**3/(4e-7*Math.PI);const I=0.5*M*Rb*Rb;
+  const tMin=mi*P[1],tMax=mi*P[0];
+  const wn=Math.sqrt(mi*P[1]/I);
+  const dev=(Math.atan(1/Math.sqrt(kap))-Math.atan(Math.sqrt(kap)))*180/Math.PI;
+  let acc=0;for(let i=0;i<720;i++){const t=i*Math.PI/360,c=Math.cos(t),s=Math.sin(t);const v=Math.abs(2*kap*s*c*(1-kap*kap)/Math.pow(c*c+kap*kap*s*s,2));if(v>acc)acc=v;}
+  const tInert=I*w*w*acc;
+  const F=3*mi*P[0]/(r*1e-3), Wt=M*9.81;
+  const U=w*Rb,Re=U*2*Rb/1e-6,Qid=pitch*f*Math.PI*Rb*Rb,At=Math.PI*Dt*Dt/4,Vid=Qid/At,dp=0.5*998*U*U;
+  const tFl=998*Qid*Rb*U;
+  const sig=0.05,skin=1/Math.sqrt(Math.PI*f*4e-7*Math.PI*sig);
+  const Pe=Math.min(Vid,0.01)*Dt/5e-10;
+  const e=(v,u,dg=2)=>{if(!isFinite(v))return '–';const ex=Math.floor(Math.log10(Math.abs(v)));return (Math.abs(ex)>=4?(v/10**ex).toFixed(dg)+'×10'+String(ex).replace('-','⁻').replace(/\d/g,c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[c]):v.toPrecision(3))+(u?' '+u:'');};
+  const L=[
+   ['1','Drive','m','The motor turns the magnet at f',
+    `The sensor sees ${pm.toFixed(2)} samples per revolution at ${fs} samples/s, so the magnet turns at f = ${f.toFixed(1)} Hz (${(60*f).toFixed(0)} rpm). At this frequency the field is quasi-static. The electromagnetic skin depth in water is hundreds of metres, so the field passes through the water and the plastic tube unchanged, and the static field model of section 2 applies inside the tube.`,
+    'δ = 1/√(π f μ₀ σ),  σ_water ≈ 0.05 S/m',
+    [['Shaft frequency f',f.toFixed(1)+' Hz'],['Skin depth in water',skin.toFixed(0)+' m']]],
+   ['2','Counter-rotation','v','Below the magnet, the field turns backwards',
+    `For a moment m = m(sin θ, cos θ) turning in the y–z plane, the dipole field directly below it is B ∝ (−sin θ, 2 cos θ). Its direction angle is φ = −atan(κ tan θ) with κ = ${kap.toFixed(2)}. As θ increases, φ decreases, so the field under the magnet rotates opposite to the magnet. The simple picture is meshed gears. The underside of the external magnet sweeps one way, and the near pole of the impeller is pulled along with it, so the impeller spins the other way. This is exactly what the simulator shows. The sensor confirms the ellipse and its κ (Fig. 3, Fig. 6).`,
+    'φ(θ) = −atan(κ tan θ),   dφ/dθ = −κ / (cos²θ + κ² sin²θ)     (5)',
+    [['Field turning rate, slowest',kap.toFixed(2)+' × magnet'],['Field turning rate, fastest',(1/kap).toFixed(2)+' × magnet']]],
+   ['3','Torque and lock','e','The impeller follows the field with a lag',
+    `The impeller's magnets (moment m<sub>i</sub>) feel τ = m<sub>i</sub> × B = m<sub>i</sub>|B| sin δ, where δ is the lag behind the field. In steady running the lag grows until the magnetic torque equals the fluid and friction load. Because |B| swings between B<sub>t</sub> and B<sub>r</sub>, the safe upper limit on load is m<sub>i</sub>B<sub>t</sub>. Inertia matters too. A rotor that kept a perfectly steady speed would see its lag wobble by ±${dev.toFixed(1)}° twice per turn. A light rotor instead speeds up and slows down with the field, which takes up to I·ω²·max|φ″| of torque. The ratio ω/ω<sub>n</sub>, with ω<sub>n</sub> = √(m<sub>i</sub>B<sub>t</sub>/I), says which case applies. It also sets the start-up (pull-in) limit: from rest, the impeller can only lock if the drive is not much faster than ω<sub>n</sub>.`,
+    'τ = m_i |B| sin δ ;  ω_n = √(m_i B_t / I) ;  I ≈ ½ M R_b²',
+    [['Max torque, weakest phase',(tMin*1e6).toFixed(0)+' µN·m'],['Max torque, strongest phase',(tMax*1e6).toFixed(0)+' µN·m'],['Torque to follow field rhythm',(tInert*1e6).toFixed(0)+' µN·m'],['ω / ω_n',(w/wn).toFixed(2)+(w/wn>1?' (ramp the start)':' (locks directly)')]]],
+   ['4','Attraction','e','The impeller is also pulled toward the magnet',
+    `A dipole in a non-uniform field feels a force F = ∇(m<sub>i</sub>·B). With the impeller locked and aligned with B, this pulls it toward the external magnet, with magnitude about 3m<sub>i</sub>|B|/r because the field falls as r⁻³. The force presses the impeller against the upper tube wall or its bearing, adding friction torque. Because |B| varies twice per turn, the force pulses at 2f, which can cause vibration.`,
+    'F ≈ 3 m_i |B| / r   (pulsing at 2f)',
+    [['Attraction force, peak',(F*1e3).toFixed(1)+' mN'],['Rotor weight Mg',(Wt*1e3).toFixed(2)+' mN'],['Force / weight',(F/Wt).toFixed(0)+'×']]],
+   ['5','Pumping','e','Rotating blades push the fluid along the tube',
+    `The blade tips move at U = ωR<sub>b</sub>. At this Reynolds number the flow is inertial, not viscous, so the blades act like a small axial pump. Euler's turbomachine equation gives the pressure rise as Δp ≈ ρU·Δc<sub>θ</sub>, of order ½ρU². The blade handedness combined with the rotation sense decides the flow direction, which is why the dye moves right to left and should reverse with the motor. The fluid leaves with swirl, and its angular-momentum flux ρQR<sub>b</sub>c<sub>θ</sub> is the load torque the magnet must supply in link 3. A screw with no leakage would move one pitch of fluid per turn. That ideal Q is an upper bound, and the measured-to-ideal ratio is the slip you can measure from the dye.`,
+    'Δp ≈ ρ U c_θ ;  Q_ideal = p · f · πR_b² ;  τ_fluid ≈ ρ Q R_b c_θ',
+    [['Blade tip speed U',U.toFixed(2)+' m/s'],['Reynolds number 2UR_b/ν',Re.toFixed(0)],['Pressure scale ½ρU²',dp.toFixed(0)+' Pa'],['Ideal flow (upper bound)',(Qid*6e7).toFixed(0)+' mL/min'],['Fluid torque at ideal flow',(tFl*1e6).toFixed(0)+' µN·m']]],
+   ['6','Dye transport','e','The dye shows where the water goes',
+    `The dye's molecular diffusivity (D ≈ 5×10⁻¹⁰ m²/s) is tiny compared with advection. Even at only 1 cm/s the Péclet number is about 10⁵, so the dye is carried by the flow and barely spreads by diffusion. Its front speed is therefore a direct measurement of the mean flow, Q = V·A<sub>tube</sub>. Helical streaks downstream reveal the swirl left by the blades.`,
+    'Pe = V · D_tube / D_dye',
+    [['Péclet number at V = 1 cm/s',e(0.01*Dt/5e-10)],['Mean velocity at ideal flow',(Vid*100).toFixed(1)+' cm/s']]],
+  ];
+  const tag={m:['m','measured'],v:['v','validated model'],e:['','estimate, example geometry']};
+  box.innerHTML=L.map(([no,short,src,h,p,eq,vals])=>`<div class="link"><div class="hd"><span class="no">${no}</span><h3>${short}: ${h}</h3><span class="src ${tag[src][0]}">${tag[src][1]}</span></div><p>${p}</p><div class="eqline">${eq}</div><dl class="vals">${vals.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></div>`).join('');
+  drawOmega(J);
+}
+function drawOmega(J){
+  const d=S.sel,D=DATA[d];const host=$('ch-omega');const {svg,W,H}=frame(host,240);
+  svg.setAttribute('aria-label','Field turning rate versus magnet angle');
+  const A=pred(d,J),kap=A[1]/A[0];const f=waveFrame(d);
+  const m={l:46,r:16,t:12,b:36},y0=0,y1=2.6;
+  const X=v=>m.l+v/360*(W-m.l-m.r),Y=v=>m.t+(y1-v)/(y1-y0)*(H-m.t-m.b);
+  [0,0.5,1,1.5,2,2.5].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:v===1?'var(--rule)':'var(--grid)'},svg);txt(svg,m.l-6,Y(v)+4,v,'tick',{'text-anchor':'end'});});
+  [0,90,180,270,360].forEach(v=>txt(svg,X(v),H-m.b+16,v+'°','tick',{'text-anchor':'middle'}));
+  txt(svg,(m.l+W-m.r)/2,H-4,'shaft angle θ from the sensor direction','axl',{'text-anchor':'middle'});
+  txt(svg,12,(m.t+H-m.b)/2,'|dφ/dθ|','axl',{'text-anchor':'middle',transform:`rotate(-90 12 ${(m.t+H-m.b)/2})`});
+  let p='';for(let i=0;i<=360;i++){const t=i*Math.PI/180,c=Math.cos(t),s=Math.sin(t);p+=(i?'L':'M')+X(i)+' '+Y(Math.min(y1,kap/(c*c+kap*kap*s*s)));}
+  el('path',{d:p,fill:'none',stroke:'var(--accent)','stroke-width':2},svg);
+  const ang=[];for(let b=0;b<NB;b++){ang.push(Math.atan2(D.wave.by.mean[b]-f.oy,D.wave.bz.mean[b]-f.oz));}
+  const pts=[];for(let b=0;b<NB;b++){let dphi=ang[(b+1)%NB]-ang[b];dphi=Math.atan2(Math.sin(dphi),Math.cos(dphi));const rate=Math.abs(dphi)/(2*Math.PI/NB);let th=((b+1)*360/NB-f.alpha*180/Math.PI)%360;if(th<0)th+=360;pts.push([th,rate]);}
+  pts.forEach(([th,v])=>{el('circle',{cx:X(th),cy:Y(Math.min(y1,v)),r:4,fill:'var(--panel)',stroke:'var(--ink-2)','stroke-width':1.6},svg);});
+  txt(svg,X(90),Y(Math.min(y1,1/kap))-10,'fastest: 1/κ','tick',{fill:'var(--accent)','text-anchor':'middle'});
+  txt(svg,X(180),Y(kap)+18,'slowest: κ','tick',{fill:'var(--accent)','text-anchor':'middle'});
+  txt(svg,W-m.r-4,Y(1)-5,'magnet rate','tick',{'text-anchor':'end'});
+  $('leg6').innerHTML=`<span><i class="sw-line" style="border-color:var(--accent)"></i>Eq. 5, κ = ${kap.toFixed(2)} (model)</span><span><i class="sw-dot" style="border-color:var(--ink-2)"></i>measured at ${d} mm</span>`;
+}
+
+/* ---------- static findings (computed from the data) ---------- */
+function findings(){
+  const keep={...S};S.model='finite';S.D=6.35;S.L=12.7;S.ref='axis';S.align=false;cache.clear();
+  const J0=1.32,fin={},kM={};DIST.forEach(d=>{const p=perJ(d);fin[d]=J0*p[0];kM[d]=p[1]/p[0];});
+  S.model='dipole';const dip={};DIST.forEach(d=>{dip[d]=J0*perJ(d)[0];});
+  Object.assign(S,keep);cache.clear();
+  const er=d=>(fin[d]-DATA[d].major[0])/DATA[d].major[0]*100,ed=d=>(dip[d]-DATA[d].major[0])/DATA[d].major[0]*100,fd=d=>(fin[d]/dip[d]-1)*100;
+  const kap=d=>DATA[d].minor[0]/DATA[d].major[0];
+  const dip20=DATA[12].major[0]*Math.pow(12/20,3),dip20c=DATA[12].major[0]*Math.pow(12/(20/Math.cos(DATA[20].tilt[0]*Math.PI/180)),3);
+  const within5=DIST.filter(d=>Math.abs(er(d))<=5).length;
+  const F=[
+   ['g','Confirmed',`Datasheet-only prediction: ${within5} of 4 radial amplitudes within 5%`,`With B<sub>r</sub> = 1.32 T and the K&amp;J D48DIA size, nothing fitted, the finite-cylinder model predicts the radial amplitude to ${DIST.map(d=>sgn(er(d))).join(', ')} at 12, 20, 30 and 37 mm. An earlier attempt with an assumed 9 × 20 mm magnet needed a strength of only 0.40 T, which was a sign that the size was wrong. The measured size and the datasheet remove that discrepancy. The waveform is a clean sinusoid (B<sub>z</sub> harmonic distortion ${DATA[12].thd_z}% at 12 mm), and B<sub>x</sub> stays below ${Math.max(...DIST.map(d=>DATA[d].bx[0])).toFixed(2)} mT, so the sensor sat in the magnet's midplane.`],
+   ['g','Physics',`Finite size matters up close, and the data sit between the two models`,`Integrating over the real cylinder instead of using a point dipole of the same moment changes the radial field by ${fd(12).toFixed(0)}%, ${fd(20).toFixed(0)}%, ${fd(30).toFixed(0)}% and ${fd(37).toFixed(0)}% at 12, 20, 30 and 37 mm, shrinking as (size/distance)². At 12 mm the measurement lies between the two (finite ${sgn(er(12))}, dipole ${sgn(ed(12))}), so a placement uncertainty of about 0.7 mm hides which one is right. By 37 mm, a point dipole is within 2% of the cylinder.`],
+   ['w','Open',`12 mm reads ${Math.abs(er(12)).toFixed(0)}% above the prediction`,`The measured field at 12 mm is ${DATA[12].major[0].toFixed(1)} mT against ${fin[12].toFixed(1)} mT predicted. Reaching it needs the sensor about 0.7 mm closer than recorded. Because the field falls as r<sup>−3</sup>, 12 mm is the point most sensitive to placement, and it is the only point whose error has the opposite sign to the others. See section 4 for the placement and repeat-measurement argument.`],
+   ['w','Open',`Sideways field: κ falls faster than the model`,`The measured ratio B<sub>t</sub>/B<sub>r</sub> goes ${DIST.map(d=>kap(d).toFixed(2)).join(' → ')} from 12 to 37 mm, while the finite magnet gives ${DIST.map(d=>kM[d].toFixed(2)).join(' → ')}. The tangential amplitude is therefore ${DIST.map(d=>sgn((fin[d]*kM[d]-DATA[d].minor[0])/DATA[d].minor[0]*100)).join(', ')} off. Steel parts near the magnet, differences between the sensor's axes, and the 0.13 mT resolution at 37 mm are the candidates, with a test for each in section 4.`],
+   ['g','Retaken',`20 mm: from 36% to ${Math.abs(er(20)).toFixed(0)}% after re-measuring`,`The first 20 mm attempt (grey ✕) had its field ellipse rotated 22° and read ${DATA['20old'].major[0].toFixed(2)} mT. The retaken run reads ${DATA[20].major[0].toFixed(2)} mT, with the tilt down to ${Math.abs(DATA[20].tilt[0]).toFixed(0)}°, against ${fin[20].toFixed(2)} mT predicted. The residual tilt of ${Math.abs(DATA[20].tilt[0]).toFixed(0)}° suggests a small sideways offset (about ${(20*Math.tan(Math.abs(DATA[20].tilt[0])*Math.PI/180)).toFixed(1)} mm if it came from placement). That offset would lower the field by about ${((1-Math.pow(Math.cos(Math.abs(DATA[20].tilt[0])*Math.PI/180),3))*100).toFixed(0)}%, close to the remaining error.`],
+   ['g','Speed','Motor speed was steady',`At 12 V the period was ${DIST.map(d=>DATA[d].period[0].toFixed(1)).join(', ')} samples per revolution, with a revolution-to-revolution SD under 1%. The amplitude varied by less than 0.2% across each 10,000-sample record. In this quasi-static regime, speed does not enter the field model.`]
+  ];
+  $('find').innerHTML=F.map(([c,t,h,b])=>`<div class="finding"><div class="tag ${c}">${t}</div><h3>${h}</h3><p>${b}</p></div>`).join('');
+}
+function updateNotes(){
+  const J=S.Jcur;if(!J)return;const tb=document.querySelector('#tbl-notes tbody');tb.innerHTML='';
+  const solve=(k,target)=>{let lo=S.D/2+0.3,hi=400;for(let i=0;i<80;i++){const mid=Math.sqrt(lo*hi);if(J*perJ(mid)[k]>target)lo=mid;else hi=mid;}return Math.sqrt(lo*hi);};
+  DIST.forEach(d=>{const D=DATA[d],r=rEff(d),P=pred(d,J);
+    const sr=solve(0,D.major[0])-r,st=solve(1,D.minor[0])-r;
+    const n=-(Math.log(perJ(r*1.01)[0])-Math.log(perJ(r/1.01)[0]))/(Math.log(1.01)-Math.log(1/1.01));
+    const er=(P[0]-D.major[0])/D.major[0]*100,et=(P[1]-D.minor[0])/D.minor[0]*100;
+    tb.insertAdjacentHTML('beforeend',`<tr><td class="mono">${d} mm</td><td class="err ${errCls(er)}">${sgn(er)}</td><td class="mono">${(sr>=0?'+':'−')+Math.abs(sr).toFixed(2)} mm</td><td class="mono">${n.toFixed(2)}</td><td class="err ${errCls(et)}">${sgn(et)}</td><td class="mono">${(st>=0?'+':'−')+Math.abs(st).toFixed(2)} mm</td><td class="mono">${(D.minor[0]/D.major[0]).toFixed(3)} / ${(P[1]/P[0]).toFixed(3)}</td></tr>`);});
+  const set=(id,v)=>{const e=$(id);if(e)e.textContent=v.toFixed(2);};
+  const q=d=>{const p=perJ(rEff(d));return p[1]/p[0];};
+  set('k-mod12',q(12));set('k-mod37',q(37));set('k-me12',DATA[12].minor[0]/DATA[12].major[0]);set('k-me37',DATA[37].minor[0]/DATA[37].major[0]);
+  const V=Math.PI*(S.D/2)**2*S.L*1e-9;const Jc=J;
+  if($('m-M'))$('m-M').textContent=(Jc/(4e-7*Math.PI)/1e6).toFixed(2);
+  if($('m-m'))$('m-m').textContent=(Jc*V/(4e-7*Math.PI)).toFixed(2);
+}
+
+/* ---------- wiring ---------- */
+function seg(id,key,cb){document.querySelectorAll(`#${id} button`).forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll(`#${id} button`).forEach(x=>x.setAttribute('aria-pressed',x===b));S[key]=b.dataset.v;cb&&cb();cache.clear();update();}));}
+seg('seg-model','model');seg('seg-ref','ref');seg('seg-cal','cal',()=>{$('in-J').disabled=S.cal!=='manual';if(S.cal==='manual')S.J=+$('in-J').value||S.Jcur;});
+$('in-Br').addEventListener('input',e=>{const v=+e.target.value;if(v>0){S.Br=v;update();updateNotes();}});
+$('in-J').addEventListener('input',e=>{S.J=+e.target.value;update();});
+$('in-delta').addEventListener('input',e=>{S.delta=+e.target.value;$('dval').textContent=S.delta.toFixed(2).replace(/0$/,'');update();});
+$('in-align').addEventListener('change',e=>{S.align=e.target.checked;update();});
+['in-D','in-L'].forEach(id=>$(id).addEventListener('input',e=>{const v=+e.target.value;if(v>0){S[id==='in-D'?'D':'L']=v;cache.clear();update();}}));
+['c-r','c-tgt','c-a','c-j','c-n','p-rb','p-pitch','p-mass','p-tube','in-fs'].forEach(id=>$(id).addEventListener('input',()=>{drawCalc(S.Jcur);drawPhysics(S.Jcur);}));
+const tabs=$('tabs-d');DIST.forEach(d=>{const b=document.createElement('button');b.textContent=d+' mm';b.setAttribute('aria-pressed',d===S.sel);b.addEventListener('click',()=>{S.sel=d;tabs.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));drawWave(S.Jcur);drawEll(S.Jcur);drawOmega(S.Jcur);});tabs.appendChild(b);});
+const per=DIST.map(d=>DATA[d].period[0]);const pm=per.reduce((a,b)=>a+b)/per.length;$('per-txt').textContent=pm.toFixed(2)+' (range '+Math.min(...per).toFixed(2)+'–'+Math.max(...per).toFixed(2)+')';
+$('in-fs').addEventListener('input',e=>{const fs=+e.target.value;$('rpm-out').textContent=fs>0?(60*fs/pm).toFixed(0)+' RPM ('+(fs/pm).toFixed(2)+' Hz)':'enter a rate';});
+update();findings();updateNotes();drawRaw();$('in-fs').dispatchEvent(new Event('input'));
+let rt;new ResizeObserver(()=>{clearTimeout(rt);rt=setTimeout(()=>{update();drawRaw();},80);}).observe(document.querySelector('main'));
+</script>
